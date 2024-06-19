@@ -2,9 +2,7 @@
 #set title 'no'
 set xl 't[ns]'
 set yl 'V[V]'
-p 'test.txt' u 1:2 title 'commandr[1][3][9]' w steps lw 3,\
-  'test.txt' u 1:3 title 'right1' w steps lw 3,\
-  'test.txt' u 1:4 title 'commandr[1][3][10]' w steps lw 3,\
-  'test.txt' u 1:5 title 'left' w steps lw 3,\
-  'test.txt' u 1:6 title 'right2' w steps lw 3,\
-  'test.txt' u 1:7 title 'down' w steps lw 3,\
+p 'test.txt' u 1:2 title 'commandd[0][3][10]' w steps lw 3,\
+  'test.txt' u 1:3 title 'upper' w steps lw 3,\
+  'test.txt' u 1:4 title 'downer' w steps lw 3,\
+  'test.txt' u 1:5 title 'commandd[0][2][10]' w steps lw 3,\
