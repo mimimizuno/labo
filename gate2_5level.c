@@ -655,8 +655,9 @@ int main()
         // fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_d[0][0][8].Vn, seo_command_d[0][9][8].Vn, seo_command_d[1][0][10].Vn, seo_command_d[1][9][10].Vn);
         // fprintf(fp9, "%f %f %f %f %f %f\n", t, seo_command_l[0][2][12].Vn, owseo_DtoC_dtol[2][12].ows[3].Vn, owseo_command_l[0][2][10].ows[3].Vn, owseo_command_l[0][2][11].ows[0].Vn, owseo_CtoD_l[0][1][11].ows[0].Vn);
         // fprintf(fp9, "%f %f %f %f %f %f\n", t, seo_command_l[0][6][8].Vn, owseo_DtoC_dtol[6][8].ows[3].Vn, owseo_command_l[0][6][6].ows[3].Vn, owseo_command_l[0][6][7].ows[0].Vn, owseo_CtoD_l[0][5][7].ows[0].Vn);
-        // fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_d[0][2][10].Vn, owseo_command_d[0][0][10].ows[3].Vn, owseo_command_d[0][0][10].ows[0].Vn, seo_command_d[0][1][10].Vn);
-        fprintf(fp9,"%f %f %f %f %f\n",t,seo_command_d[0][3][10].Vn,owseo_command_d[0][1][10].ows[3].Vn,owseo_command_d[0][1][10].ows[0].Vn,seo_command_d[0][2][10].Vn);
+        //fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_d[0][2][10].Vn, owseo_command_d[0][0][10].ows[3].Vn, owseo_command_d[0][0][10].ows[0].Vn, seo_command_d[0][1][10].Vn);
+        // fprintf(fp9,"%f %f %f %f %f\n",t,seo_command_d[1][2][5].Vn,owseo_command_d[1][0][5].ows[3].Vn,owseo_command_d[1][0][5].ows[0].Vn,seo_command_d[1][1][5].Vn);
+        fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_d[0][2][8].Vn, owseo_command_d[0][0][8].ows[3].Vn, owseo_command_d[0][0][8].ows[0].Vn, seo_command_d[0][1][8].Vn);
         if (pt <= t)
         {
             pt += 0.1;
