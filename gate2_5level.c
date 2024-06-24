@@ -19,7 +19,6 @@
 #define seo_number 8     // 振動子の層の総数
 #define owseo_number 12  // 一方通行振動子の層の総数
 
-// test
 
 int main()
 {
