@@ -64,6 +64,22 @@ void seo_Pcalc(seo *p, int leg, double Cs, double Cjs)
         q5 = (Cs * (-p->Q + Cjs * p->V5 - Cs * (p->V1 + p->V2 + p->V3 + p->V4 - 4 * p->V5))) / (5 * Cs + Cjs);
         p->Vn = (p->Q + q1 + q2 + q3 + q4 + q5) / Cjs;
     }
+        else if (leg == 6)
+    {
+        double q1 = 0;
+        double q2 = 0;
+        double q3 = 0;
+        double q4 = 0;
+        double q5 = 0;
+        double q6 = 0;
+        q1 = (Cs * (-p->Q + Cjs * p->V1 + Cs * (4 * p->V1 - p->V2 - p->V3 - p->V4 - p->V5 + p->V6))) / (6 * Cs + Cjs);
+        q2 = (Cs * (-p->Q + Cjs * p->V2 - Cs * (p->V1 - 4 * p->V2 + p->V3 + p->V4 + p->V5 + p->V6))) / (6 * Cs + Cjs);
+        q3 = (Cs * (-p->Q + Cjs * p->V3 - Cs * (p->V1 + p->V2 - 4 * p->V3 + p->V4 + p->V5 + p->V6))) / (6 * Cs + Cjs);
+        q4 = (Cs * (-p->Q + Cjs * p->V4 - Cs * (p->V1 + p->V2 + p->V3 - 4 * p->V4 + p->V5 + p->V6))) / (6 * Cs + Cjs);
+        q5 = (Cs * (-p->Q + Cjs * p->V5 - Cs * (p->V1 + p->V2 + p->V3 + p->V4 - 4 * p->V5 + p->V6))) / (6 * Cs + Cjs);
+        q6 = (Cs * (-p->Q + Cjs * p->V6 - Cs * (p->V1 + p->V2 + p->V3 + p->V4 + p->V5 - 4 * p->V6))) / (6 * Cs + Cjs);
+        p->Vn = (p->Q + q1 + q2 + q3 + q4 + q5 + q6) / Cjs;
+    }
 }
 
 // 振動子のエネルギー計算(&seo,足の本数,Cs,Cjs)
@@ -98,6 +114,11 @@ void seo_Ecalc(seo *p, int leg, double Cs, double Cjs)
     {
         p->dE[0] = e * (-e + 2 * (p->Q + Cs * (p->V1 + p->V2 + p->V3 + p->V4 + p->V5))) / (2 * (5 * Cs + Cjs));
         p->dE[1] = -e * (e + 2 * (p->Q + Cs * (p->V1 + p->V2 + p->V3 + p->V4 + p->V5))) / (2 * (5 * Cs + Cjs));
+    }
+    else if (leg == 6)
+    {
+        p->dE[0] = e * (-e + 2 * (p->Q + Cs * (p->V1 + p->V2 + p->V3 + p->V4 + p->V5 + p->V6))) / (2 * (6 * Cs + Cjs));
+        p->dE[1] = -e * (e + 2 * (p->Q + Cs * (p->V1 + p->V2 + p->V3 + p->V4 + p->V5 + p->V6))) / (2 * (6 * Cs + Cjs));
     }
 }
 
