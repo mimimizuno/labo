@@ -13,6 +13,7 @@ typedef struct
     double V3;
     double V4;
     double V5;
+    double V6;
     double Q;
     double dQ;
     double dE[2];
