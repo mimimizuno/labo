@@ -736,8 +736,7 @@ onewayseo *ow_seo3dimwt(onewayseo *p, int particles, int rows, int columns, doub
 // 一方通行のVd割り当て(&oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3)
 void oneway_4seo_setVd(oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3)
 {
-    int i = 0;
-    for (i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
     {
         if (i == 1 || i == 2)
         {
