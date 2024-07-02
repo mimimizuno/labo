@@ -516,17 +516,17 @@ int main()
                 oneway_4seo_setVd(&owseo_command_d[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3); // 右から左への伝搬
                 if (i == 0 && j == 0 && k == 8)
                 {
-                    printf("%d %d %d ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", i, j, k, owseo_command_d[i][j][k].ows[0].Vd, owseo_command_d[i][j][k].ows[1].Vd, owseo_command_d[i][j][k].ows[2].Vd, owseo_command_d[i][j][k].ows[3].Vd);
+                    printf("set Vd %d %d %d ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", i, j, k, owseo_command_d[i][j][k].ows[0].Vd, owseo_command_d[i][j][k].ows[1].Vd, owseo_command_d[i][j][k].ows[2].Vd, owseo_command_d[i][j][k].ows[3].Vd);
                 }
                 if (i == 0 && j == 1 && k == 8)
                 {
-                    printf("%d %d %d ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", i, j, k, owseo_command_d[i][j][k].ows[0].Vd, owseo_command_d[i][j][k].ows[1].Vd, owseo_command_d[i][j][k].ows[2].Vd, owseo_command_d[i][j][k].ows[3].Vd);
+                    printf("set Vd %d %d %d ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", i, j, k, owseo_command_d[i][j][k].ows[0].Vd, owseo_command_d[i][j][k].ows[1].Vd, owseo_command_d[i][j][k].ows[2].Vd, owseo_command_d[i][j][k].ows[3].Vd);
                 }
             }
         }
     }
-printf("0 0 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][0][8].ows[0].Vd, owseo_command_d[0][0][8].ows[1].Vd, owseo_command_d[0][0][8].ows[2].Vd, owseo_command_d[0][0][8].ows[3].Vd);
-        printf("0 1 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][1][8].ows[0].Vd, owseo_command_d[0][1][8].ows[1].Vd, owseo_command_d[0][1][8].ows[2].Vd, owseo_command_d[0][1][8].ows[3].Vd);
+    printf("end set Vd 0 0 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][0][8].ows[0].Vd, owseo_command_d[0][0][8].ows[1].Vd, owseo_command_d[0][0][8].ows[2].Vd, owseo_command_d[0][0][8].ows[3].Vd);
+    printf("end set Vd 0 1 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][1][8].ows[0].Vd, owseo_command_d[0][1][8].ows[1].Vd, owseo_command_d[0][1][8].ows[2].Vd, owseo_command_d[0][1][8].ows[3].Vd);
 
     // 下命令から衝突の一方通行のバイアス電圧
     for (i = 0; i < SEO_PARTICLES; i++)
@@ -647,9 +647,9 @@ printf("0 0 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_
             oneway_4seo_setVd(&owseo_DtoC_rtod[i][j], Vd_owseo, right, C, Cjs2, Cjs3);
         }
     }
-int time = 0;
-printf("0 0 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][0][8].ows[0].Vd, owseo_command_d[0][0][8].ows[1].Vd, owseo_command_d[0][0][8].ows[2].Vd, owseo_command_d[0][0][8].ows[3].Vd);
-        printf("0 1 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][1][8].ows[0].Vd, owseo_command_d[0][1][8].ows[1].Vd, owseo_command_d[0][1][8].ows[2].Vd, owseo_command_d[0][1][8].ows[3].Vd);
+    int time = 0;
+    printf("before while 0 0 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][0][8].ows[0].Vd, owseo_command_d[0][0][8].ows[1].Vd, owseo_command_d[0][0][8].ows[2].Vd, owseo_command_d[0][0][8].ows[3].Vd);
+    printf("before while 0 1 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][1][8].ows[0].Vd, owseo_command_d[0][1][8].ows[1].Vd, owseo_command_d[0][1][8].ows[2].Vd, owseo_command_d[0][1][8].ows[3].Vd);
     /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
     while (t < 200)
     {
