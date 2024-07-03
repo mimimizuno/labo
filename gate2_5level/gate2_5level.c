@@ -527,7 +527,7 @@ int main()
     }
     printf("end set Vd 0 0 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][0][8].ows[0].Vd, owseo_command_d[0][0][8].ows[1].Vd, owseo_command_d[0][0][8].ows[2].Vd, owseo_command_d[0][0][8].ows[3].Vd);
     printf("end set Vd 0 1 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][1][8].ows[0].Vd, owseo_command_d[0][1][8].ows[1].Vd, owseo_command_d[0][1][8].ows[2].Vd, owseo_command_d[0][1][8].ows[3].Vd);
-
+    printf("end set Vd 1 0 8 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[1][0][8].ows[0].Vd, owseo_command_d[1][0][8].ows[1].Vd, owseo_command_d[1][0][8].ows[2].Vd, owseo_command_d[1][0][8].ows[3].Vd);
     // 下命令から衝突の一方通行のバイアス電圧
     for (i = 0; i < SEO_PARTICLES; i++)
     {
@@ -709,7 +709,6 @@ int main()
                     {
                         if ((i == 0 && (k % 2 == 0)) || (i == 1 && (k % 2 == 1)))
                         {
-                            // i = 0 かつ j = 1
                             if (j == 1)
                             {
                                 seo_command_d[i][j][k].V1 = owseo_DtoC_rtod[j][k].ows[3].Vn;
