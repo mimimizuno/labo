@@ -32,7 +32,7 @@ int main()
 
     st_time = getTime(); // 実行開始時刻を記録
     fp = fopen("connect.txt", "w");
-    if (fp)
+    if (fp == NULL)
     {
         printf("file open error.\n");
         return -1;
@@ -226,7 +226,7 @@ int main()
 
             /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         }
-        end_time = getTime();          // 実行終了時刻を記録
-        getRunTime(st_time, end_time); // 実行時間を表示
     }
+    end_time = getTime();          // 実行終了時刻を記録
+    getRunTime(st_time, end_time); // 実行時間を表示
 }
