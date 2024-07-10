@@ -1,0 +1,9 @@
+#unset key
+#set title 'no'
+set xl 't[ns]'
+set yl 'V[V]'
+p 'connect.txt' u 1:2 title 'command_d[0].Vn' w steps lw 3,\
+  'connect.txt' u 1:3 title 'command_d[1].Vn' w steps lw 3,\
+  'connect.txt' u 1:4 title 'detection[0].Vn' w steps lw 3,\
+  'connect.txt' u 1:5 title 'command_r[0].Vn' w steps lw 3,\
+  'connect.txt' u 1:6 title 'command_r[1].Vn' w steps lw 3,\
