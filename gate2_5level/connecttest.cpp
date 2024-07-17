@@ -41,7 +41,7 @@ int main()
     /*初期化--------------------------------------------------------------------------------------------------------------------------------------------------------*/
     // 回路のポインタ
 
-    seo *seoP[5];
+    seo *seoP[4];
     oneway_4seo *owseoP[3];
     seo seotrigger[2] = {0};
     seo command_d[2] = {0};
@@ -50,8 +50,8 @@ int main()
     seoP[2] = command_r;
     seo detection[1] = {0};
     seoP[3] = detection;
-    seo dd_seo[2] = {0};
-    seoP[4] = dd_seo;
+    // seo dd_seo[2] = {0};
+    // seoP[4] = dd_seo;
 
     oneway_4seo dD[2] = {0};
     owseoP[1] = dD;
@@ -66,13 +66,14 @@ int main()
 
     for (auto &x : command_d) x.Vd = Vd_seo;
     for (auto &x : command_r) x.Vd = Vd_seo;
-    for (auto &x : detection) x.Vd = Vd_seo; // 一個分で変化するかどうか2つの時は-viasarrange(C, 4, 3, Cjs4, Cjs3)
-    for (auto &x : dd_seo)    x.Vd = Vd_seo;
+    // for (auto &x : detection) x.Vd = Vd_seo - viasarrange(C, 4, 3, Cjs4, Cjs3); // 2つのトンネル
+    for (auto &x : detection) x.Vd = Vd_seo; // 1つでトンネル
+    // for (auto &x : dd_seo)    x.Vd = Vd_seo;
     for (int i = 0; i < 2; i++) oneway_4seo_setVd(&dD[i], Vd_owseo, right, C, Cjs2, Cjs3);
     for (int i = 0; i < 2; i++) oneway_4seo_setVd(&Dr[i], Vd_owseo, right, C, Cjs2, Cjs3);
     // for (int i = 0; i < 2; i++) oneway_4seo_setVd(&dd[i], Vd_owseo, right, C, Cjs2, Cjs3);
 
-    cout << "二個目のトリガ入力時間を入力してください（一回目200ns）:" << endl;
+    cout << "input the second trigger time (the first trigger is 200ns,0-300ns):" << endl;
     int tin;
     cin >> tin;
 
@@ -109,8 +110,8 @@ int main()
             {
                 command_d[i].V1 = seotrigger[i].Vn;
                 command_d[i].V2 = dD[i].ows[0].Vn;
-                if (i == 0) command_d[i].V3 = dd_seo[1].Vn;
-                else command_d[i].V3 = dd_seo[0].Vn;
+                if (i == 0) command_d[i].V3 = command_r[1].Vn;
+                else command_d[i].V3 = command_r[0].Vn;
                 seo_Pcalc(&command_d[i], 3, C, Cjs3);
             }
 
@@ -128,7 +129,8 @@ int main()
             for (i = 0; i < 2; i++)
             {
                 command_r[i].V1 = Dr[i].ows[3].Vn;
-                command_r[i].V2 = dd_seo[i].Vn;
+                if (i == 0) command_r[i].V2 = command_d[1].Vn;
+                else command_r[i].V2 = command_d[0].Vn;
                 seo_Pcalc(&command_r[i], 2, C, Cjs2);
             }
 
@@ -145,18 +147,18 @@ int main()
             }
 
             // dd_seo
-            for (i = 0; i < 2; i++)
-            {
-                if (i == 0){
-                    dd_seo[i].V1 = command_d[1].Vn;
-                    dd_seo[i].V2 = command_r[0].Vn;
-                }
-                else{
-                    dd_seo[i].V1 = command_d[0].Vn;
-                    dd_seo[i].V2 = command_r[1].Vn;  
-                }
-                seo_Pcalc(&dd_seo[i], 2, C, Cjs2);
-            }
+            // for (i = 0; i < 2; i++)
+            // {
+            //     if (i == 0){
+            //         dd_seo[i].V1 = command_d[1].Vn;
+            //         dd_seo[i].V2 = command_r[0].Vn;
+            //     }
+            //     else{
+            //         dd_seo[i].V1 = command_d[0].Vn;
+            //         dd_seo[i].V2 = command_r[1].Vn;  
+            //     }
+            //     seo_Pcalc(&dd_seo[i], 2, C, Cjs2);
+            // }
         }
 
         /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -173,7 +175,7 @@ int main()
         // Dr
         for (i = 0; i < 2; i++) oneway_4seo_calcEner(&Dr[i], C, Cjs2, Cjs3);
         // dd_seo
-        for (i = 0; i < 2; i++) seo_Ecalc(&dd_seo[i], 2, C, Cjs2);
+        // for (i = 0; i < 2; i++) seo_Ecalc(&dd_seo[i], 2, C, Cjs2);
         /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         /*トンネル計算-----------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -187,7 +189,7 @@ int main()
         seoP[3] = seo_2dimwt(command_r, 2, 1, Rj);
 
         // dd_seo
-        seoP[4] = seo_2dimwt(dd_seo, 2, 1, Rj);
+        // seoP[4] = seo_2dimwt(dd_seo, 2, 1, Rj);
 
         // dD
         owseoP[1] = oneway_4seo_3dimWt(dD, 2, 1, 1, Rj);
@@ -204,7 +206,7 @@ int main()
         // トンネル待ち時間比較
         // 振動子比較(seo_p[0]が待ち時間の最小になるように)
         seoP[0] = seoP[1];
-        for (i = 2; i < 5; i++)
+        for (i = 2; i < 4; i++)
         {
             if (seoP[0]->wt[seoP[0]->tunnel] > seoP[i]->wt[seoP[i]->tunnel])
             {
@@ -230,7 +232,7 @@ int main()
         seo_3dimcharge(command_d, 2, 1, 1, R, dt);
         seo_3dimcharge(detection, 1, 1, 1, R, dt);
         seo_3dimcharge(command_r, 2, 1, 1, R, dt);
-        seo_3dimcharge(dd_seo, 2, 1, 1, R, dt);
+        // seo_3dimcharge(dd_seo, 2, 1, 1, R, dt);
 
         // 一方通行のチャージ
         oneway_4seo_3dimCharge(dD, 2, 1, 1, R, dt);
