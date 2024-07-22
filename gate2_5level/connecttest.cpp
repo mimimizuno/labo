@@ -9,7 +9,7 @@
 #define R 1.2            // 抵抗値[GΩ]
 #define Rj 0.001         // トンネル抵抗[GΩ]
 #define C 2              // 接合容量[aF]
-#define Vd_seo 0.004     // 振動子のバイアス電圧
+#define Vd_seo 0.0039     // 振動子のバイアス電圧
 #define Vd_owseo 0.0039  // 一方通行回路のバイアス電圧
 #define Cjs1 18          // 足1振動子のトンネル容量[aF]
 #define Cjs2 16          // 足2振動子のトンネル容量[aF]
@@ -66,12 +66,10 @@ int main()
 
     for (auto &x : command_d) x.Vd = Vd_seo;
     for (auto &x : command_r) x.Vd = Vd_seo;
-    // for (auto &x : detection) x.Vd = Vd_seo - viasarrange(C, 4, 3, Cjs4, Cjs3); // 2つのトンネル
-    for (auto &x : detection) x.Vd = Vd_seo; // 1つでトンネル
-    // for (auto &x : dd_seo)    x.Vd = Vd_seo;
+    for (auto &x : detection) x.Vd = Vd_seo - viasarrange(C, 4, 3, Cjs4, Cjs3); // 2つのトンネル
+    // for (auto &x : detection) x.Vd = Vd_seo; // 1つでトンネル
     for (int i = 0; i < 2; i++) oneway_4seo_setVd(&dD[i], Vd_owseo, right, C, Cjs2, Cjs3);
     for (int i = 0; i < 2; i++) oneway_4seo_setVd(&Dr[i], Vd_owseo, right, C, Cjs2, Cjs3);
-    // for (int i = 0; i < 2; i++) oneway_4seo_setVd(&dd[i], Vd_owseo, right, C, Cjs2, Cjs3);
 
     cout << "input the second trigger time (the first trigger is 200ns,0-300ns):" << endl;
     int tin;
@@ -146,19 +144,6 @@ int main()
                 oneway_4seo_calcPara(&Dr[i], C, Cjs2, Cjs3, detection[0].Vn, command_r[i].Vn);
             }
 
-            // dd_seo
-            // for (i = 0; i < 2; i++)
-            // {
-            //     if (i == 0){
-            //         dd_seo[i].V1 = command_d[1].Vn;
-            //         dd_seo[i].V2 = command_r[0].Vn;
-            //     }
-            //     else{
-            //         dd_seo[i].V1 = command_d[0].Vn;
-            //         dd_seo[i].V2 = command_r[1].Vn;  
-            //     }
-            //     seo_Pcalc(&dd_seo[i], 2, C, Cjs2);
-            // }
         }
 
         /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -188,17 +173,11 @@ int main()
         // command r
         seoP[3] = seo_2dimwt(command_r, 2, 1, Rj);
 
-        // dd_seo
-        // seoP[4] = seo_2dimwt(dd_seo, 2, 1, Rj);
-
         // dD
         owseoP[1] = oneway_4seo_3dimWt(dD, 2, 1, 1, Rj);
 
         // Dr
         owseoP[2] = oneway_4seo_3dimWt(Dr, 2, 1, 1, Rj);
-
-        // dd
-        // owseoP[3] = oneway_4seo_3dimWt(dd, 2, 1, 1, Rj);
 
         /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
