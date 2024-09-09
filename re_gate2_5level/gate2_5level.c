@@ -93,8 +93,8 @@ int main()
     owseo_p[2] = owseo_CtoD_d[0][0];                                          // 一方通行型のポインタ
 
     // 下方向の衝突判定回路と左方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_dtol[SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[3] = owseo_DtoC_dtol[0];                          // 一方通行型のポインタ
+    oneway_4seo owseo_DtoC_dtol[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[3] = owseo_DtoC_dtol[0][0];                                      // 一方通行型のポインタ
 
     // 左方向回路の一方通行回路
     oneway_4seo owseo_command_l[SEO_PARTICLES][OWSEO_ROWS][OWSEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
@@ -105,8 +105,8 @@ int main()
     owseo_p[5] = owseo_CtoD_l[0][0];                                          // 一方通行型のポインタ
 
     // 左方向の衝突判定回路と上方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_ltou[SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[6] = owseo_DtoC_ltou[0];                          // 一方通行型のポインタ
+    oneway_4seo owseo_DtoC_ltou[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[6] = owseo_DtoC_ltou[0][0];                                      // 一方通行型のポインタ
 
     // 上方向回路の一方通行回路
     oneway_4seo owseo_command_u[SEO_PARTICLES][OWSEO_ROWS - 1][OWSEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
@@ -117,8 +117,8 @@ int main()
     owseo_p[8] = owseo_CtoD_u[0][0];                                          // 一方通行型のポインタ
 
     // 上方向の衝突判定回路と右方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_utor[SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[9] = owseo_DtoC_utor[0];                          // 一方通行型のポインタ
+    oneway_4seo owseo_DtoC_utor[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[9] = owseo_DtoC_utor[0][0];                                      // 一方通行型のポインタ
 
     // 右方向回路の一方通行回路
     oneway_4seo owseo_command_r[SEO_PARTICLES][OWSEO_ROWS][OWSEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
@@ -129,8 +129,8 @@ int main()
     owseo_p[11] = owseo_CtoD_r[0][0];                                         // 一方通行型のポインタ
 
     // 右方向の衝突判定回路と下方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_rtod[SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[12] = owseo_DtoC_rtod[0];                         // 一方通行型のポインタ
+    oneway_4seo owseo_DtoC_rtod[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[12] = owseo_DtoC_rtod[0][0];                                     // 一方通行型のポインタ
 
     /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -544,13 +544,23 @@ int main()
     }
 
     // 下衝突判定から左命令の一方通行のバイアス電圧
-    for (i = 1; i < SEO_ROWS; i++)
+    for (i = 0; i < SEO_PARTICLES; i++)
     {
-        for (j = 1; j < SEO_COLUMNS; j++)
+        for (j = 1; j < SEO_ROWS; j++)
         {
-            oneway_4seo_setVd(&owseo_DtoC_dtol[i][j], Vd_owseo, right, C, Cjs2, Cjs3);
+            for (k = 1; k < SEO_COLUMNS; k++)
+            {
+                oneway_4seo_setVd(&owseo_DtoC_dtol[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+            }
         }
     }
+    // for (i = 1; i < SEO_ROWS; i++)
+    // {
+    //     for (j = 1; j < SEO_COLUMNS; j++)
+    //     {
+    //         oneway_4seo_setVd(&owseo_DtoC_dtol[i][j], Vd_owseo, right, C, Cjs2, Cjs3);
+    //     }
+    // }
 
     // 左命令の一方通行バイアス電圧
     for (i = 0; i < SEO_PARTICLES; i++)
@@ -577,11 +587,14 @@ int main()
     }
 
     // 左衝突判定から上命令のバイアス電圧
-    for (i = 1; i < SEO_ROWS; i++)
+    for (i = 0; i < SEO_PARTICLES; i++)
     {
-        for (j = 1; j < SEO_COLUMNS; j++)
+        for (j = 1; j < SEO_ROWS; j++)
         {
-            oneway_4seo_setVd(&owseo_DtoC_ltou[i][j], Vd_owseo, right, C, Cjs2, Cjs3);
+            for (k = 1; k < SEO_COLUMNS; k++)
+            {
+                oneway_4seo_setVd(&owseo_DtoC_ltou[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+            }
         }
     }
 
@@ -610,11 +623,14 @@ int main()
     }
 
     // 上衝突判定から右命令の一方通行回路のバイアス電圧
-    for (i = 1; i < SEO_ROWS; i++)
+    for (i = 0; i < SEO_PARTICLES; i++)
     {
-        for (j = 1; j < SEO_COLUMNS; j++)
+        for (j = 1; j < SEO_ROWS; j++)
         {
-            oneway_4seo_setVd(&owseo_DtoC_utor[i][j], Vd_owseo, right, C, Cjs2, Cjs3);
+            for (k = 1; k < SEO_COLUMNS; k++)
+            {
+                oneway_4seo_setVd(&owseo_DtoC_utor[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+            }
         }
     }
 
@@ -643,13 +659,17 @@ int main()
     }
 
     // 右衝突判定から下命令のバイアス電圧
-    for (i = 1; i < SEO_ROWS; i++)
+    for (i = 0; i < SEO_PARTICLES; i++)
     {
-        for (j = 1; j < SEO_COLUMNS; j++)
+        for (j = 1; j < SEO_ROWS; j++)
         {
-            oneway_4seo_setVd(&owseo_DtoC_rtod[i][j], Vd_owseo, right, C, Cjs2, Cjs3);
+            for (k = 1; k < SEO_COLUMNS; k++)
+            {
+                oneway_4seo_setVd(&owseo_DtoC_rtod[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+            }
         }
     }
+
     // int time = 0;
     // printf("before while 0 1 9 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][1][9].ows[0].Vd, owseo_command_d[0][1][9].ows[1].Vd, owseo_command_d[0][1][9].ows[2].Vd, owseo_command_d[0][1][9].ows[3].Vd);
     // printf("before while 0 2 9 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][2][9].ows[0].Vd, owseo_command_d[0][2][9].ows[1].Vd, owseo_command_d[0][2][9].ows[2].Vd, owseo_command_d[0][2][9].ows[3].Vd);
@@ -717,7 +737,7 @@ int main()
                         }
                         if (j == 1)
                         {
-                            seo_command_d[i][j][k].V1 = owseo_DtoC_rtod[j][k].ows[3].Vn;    // 右方向衝突判定から
+                            seo_command_d[i][j][k].V1 = owseo_DtoC_rtod[i][j][k].ows[3].Vn; // 右方向衝突判定から
                             seo_command_d[i][j][k].V2 = owseo_command_d[i][j][k].ows[0].Vn; //
                             seo_command_d[i][j][k].V3 = owseo_CtoD_d[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_d[i][j][k].V4 = seo_command_r[CtoC][j][k].Vn; // 右方向命令回路から
@@ -726,7 +746,7 @@ int main()
                         }
                         else if (j == SEO_ROWS - 1)
                         {
-                            seo_command_d[i][j][k].V1 = owseo_DtoC_rtod[j][k].ows[3].Vn;
+                            seo_command_d[i][j][k].V1 = owseo_DtoC_rtod[i][j][k].ows[3].Vn;
                             seo_command_d[i][j][k].V2 = owseo_command_d[i][j - 1][k].ows[3].Vn;
                             seo_command_d[i][j][k].V3 = owseo_CtoD_d[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_d[i][j][k].V4 = seo_command_d[i][0][k].Vn;    // トリガ
@@ -736,7 +756,7 @@ int main()
                         }
                         else
                         {
-                            seo_command_d[i][j][k].V1 = owseo_DtoC_rtod[j][k].ows[3].Vn;         // 右方向衝突判定から
+                            seo_command_d[i][j][k].V1 = owseo_DtoC_rtod[i][j][k].ows[3].Vn;      // 右方向衝突判定から
                             seo_command_d[i][j][k].V2 = owseo_command_d[i][j - 1][k].ows[3].Vn;  // 伝わってくる側
                             seo_command_d[i][j][k].V3 = owseo_command_d[i][j][k].ows[0].Vn;      // 伝える側
                             seo_command_d[i][j][k].V4 = owseo_CtoD_d[i][j - 1][k - 1].ows[0].Vn; // 左方向衝突判定回路へ
@@ -755,8 +775,9 @@ int main()
                 {
                     seo_detection_d[i][j].V1 = owseo_CtoD_d[0][i - 1][j - 1].ows[3].Vn;
                     seo_detection_d[i][j].V2 = owseo_CtoD_d[1][i - 1][j - 1].ows[3].Vn;
-                    seo_detection_d[i][j].V3 = owseo_DtoC_dtol[i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_d[i][j], 3, C, Cjs3);
+                    seo_detection_d[i][j].V3 = owseo_DtoC_dtol[0][i][j].ows[0].Vn;
+                    seo_detection_d[i][j].V4 = owseo_DtoC_dtol[1][i][j].ows[0].Vn;
+                    seo_Pcalc(&seo_detection_d[i][j], 4, C, Cjs4);
                 }
             }
 
@@ -774,7 +795,7 @@ int main()
                         }
                         if (k == 1)
                         {
-                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[j][k].ows[3].Vn;
+                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[i][j][k].ows[3].Vn;
                             seo_command_l[i][j][k].V2 = owseo_command_l[i][j][k].ows[0].Vn;
                             seo_command_l[i][j][k].V3 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_l[i][j][k].V4 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路から
@@ -783,7 +804,7 @@ int main()
                         }
                         else if (k == SEO_COLUMNS - 1)
                         {
-                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[j][k].ows[3].Vn;
+                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[i][j][k].ows[3].Vn;
                             seo_command_l[i][j][k].V2 = owseo_command_l[i][j][k - 1].ows[3].Vn;
                             seo_command_l[i][j][k].V3 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_l[i][j][k].V4 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路から
@@ -792,7 +813,7 @@ int main()
                         }
                         else
                         {
-                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[j][k].ows[3].Vn;         // 下方向衝突判定回路から
+                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[i][j][k].ows[3].Vn;      // 下方向衝突判定回路から
                             seo_command_l[i][j][k].V2 = owseo_command_l[i][j][k - 1].ows[3].Vn;  // 伝わってくる側
                             seo_command_l[i][j][k].V3 = owseo_command_l[i][j][k].ows[0].Vn;      // 伝える側
                             seo_command_l[i][j][k].V4 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn; // 左方向衝突判定回路へ
@@ -811,8 +832,9 @@ int main()
                 {
                     seo_detection_l[i][j].V1 = owseo_CtoD_l[0][i - 1][j - 1].ows[3].Vn;
                     seo_detection_l[i][j].V2 = owseo_CtoD_l[1][i - 1][j - 1].ows[3].Vn;
-                    seo_detection_l[i][j].V3 = owseo_DtoC_ltou[i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_l[i][j], 3, C, Cjs3);
+                    seo_detection_l[i][j].V3 = owseo_DtoC_ltou[0][i][j].ows[0].Vn;
+                    seo_detection_l[i][j].V4 = owseo_DtoC_ltou[1][i][j].ows[0].Vn;
+                    seo_Pcalc(&seo_detection_l[i][j], 4, C, Cjs4);
                 }
             }
 
@@ -830,7 +852,7 @@ int main()
                         }
                         if (j == 1)
                         {
-                            seo_command_u[i][j][k].V1 = owseo_DtoC_ltou[j][k].ows[3].Vn;
+                            seo_command_u[i][j][k].V1 = owseo_DtoC_ltou[i][j][k].ows[3].Vn;
                             seo_command_u[i][j][k].V2 = owseo_command_u[i][j][k].ows[0].Vn;
                             seo_command_u[i][j][k].V3 = owseo_CtoD_u[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_u[i][j][k].V4 = seo_command_l[CtoC][j][k].Vn; // 左向命令回路から
@@ -839,7 +861,7 @@ int main()
                         }
                         else if (j == SEO_ROWS - 1)
                         {
-                            seo_command_u[i][j][k].V1 = owseo_DtoC_ltou[j][k].ows[3].Vn;
+                            seo_command_u[i][j][k].V1 = owseo_DtoC_ltou[i][j][k].ows[3].Vn;
                             seo_command_u[i][j][k].V2 = owseo_command_u[i][j - 1][k].ows[3].Vn;
                             seo_command_u[i][j][k].V3 = owseo_CtoD_u[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_u[i][j][k].V4 = seo_command_l[CtoC][j][k].Vn; // 左方向命令回路から
@@ -848,7 +870,7 @@ int main()
                         }
                         else
                         {
-                            seo_command_u[i][j][k].V1 = owseo_DtoC_ltou[j][k].ows[3].Vn;         // 左方向衝突判定回路から
+                            seo_command_u[i][j][k].V1 = owseo_DtoC_ltou[i][j][k].ows[3].Vn;      // 左方向衝突判定回路から
                             seo_command_u[i][j][k].V2 = owseo_command_u[i][j - 1][k].ows[3].Vn;  // 伝わってくる側
                             seo_command_u[i][j][k].V3 = owseo_command_u[i][j][k].ows[0].Vn;      // 伝える側
                             seo_command_u[i][j][k].V4 = owseo_CtoD_u[i][j - 1][k - 1].ows[0].Vn; // 上方向衝突判定回路へ
@@ -867,8 +889,9 @@ int main()
                 {
                     seo_detection_u[i][j].V1 = owseo_CtoD_u[0][i - 1][j - 1].ows[3].Vn;
                     seo_detection_u[i][j].V2 = owseo_CtoD_u[1][i - 1][j - 1].ows[3].Vn;
-                    seo_detection_u[i][j].V3 = owseo_DtoC_utor[i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_u[i][j], 3, C, Cjs3);
+                    seo_detection_u[i][j].V3 = owseo_DtoC_utor[0][i][j].ows[0].Vn;
+                    seo_detection_u[i][j].V4 = owseo_DtoC_utor[1][i][j].ows[0].Vn;
+                    seo_Pcalc(&seo_detection_u[i][j], 4, C, Cjs4);
                 }
             }
 
@@ -886,36 +909,7 @@ int main()
                         }
                         if (k == 1)
                         {
-                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[j][k].ows[3].Vn;
-                            seo_command_l[i][j][k].V2 = owseo_command_l[i][j][k].ows[0].Vn;
-                            seo_command_l[i][j][k].V3 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn;
-                            seo_command_l[i][j][k].V4 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路から
-                            seo_command_l[i][j][k].V5 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路へ
-                            seo_Pcalc(&seo_command_l[i][j][k], 5, C, Cjs5);
-                        }
-                        else if (k == SEO_COLUMNS - 1)
-                        {
-                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[j][k].ows[3].Vn;
-                            seo_command_l[i][j][k].V2 = owseo_command_l[i][j][k - 1].ows[3].Vn;
-                            seo_command_l[i][j][k].V3 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn;
-                            seo_command_l[i][j][k].V4 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路から
-                            seo_command_l[i][j][k].V5 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路へ
-                            seo_Pcalc(&seo_command_l[i][j][k], 5, C, Cjs5);
-                        }
-                        else
-                        {
-                            seo_command_l[i][j][k].V1 = owseo_DtoC_dtol[j][k].ows[3].Vn;         // 下方向衝突判定回路から
-                            seo_command_l[i][j][k].V2 = owseo_command_l[i][j][k - 1].ows[3].Vn;  // 伝わってくる側
-                            seo_command_l[i][j][k].V3 = owseo_command_l[i][j][k].ows[0].Vn;      // 伝える側
-                            seo_command_l[i][j][k].V4 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn; // 左方向衝突判定回路へ
-                            seo_command_l[i][j][k].V5 = seo_command_d[CtoC][j][k].Vn;            // 下方向命令回路から
-                            seo_command_l[i][j][k].V6 = seo_command_u[CtoC][j][k].Vn;            // 上方向命令回路へ
-                            seo_Pcalc(&seo_command_l[i][j][k], 6, C, Cjs6);
-                        }
-
-                        if (k == 1)
-                        {
-                            seo_command_r[i][j][k].V1 = owseo_DtoC_utor[j][k].ows[3].Vn;
+                            seo_command_r[i][j][k].V1 = owseo_DtoC_utor[i][j][k].ows[3].Vn;
                             seo_command_r[i][j][k].V2 = owseo_command_r[i][j][k].ows[0].Vn;
                             seo_command_r[i][j][k].V3 = owseo_CtoD_r[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_r[i][j][k].V4 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路から
@@ -924,7 +918,7 @@ int main()
                         }
                         else if (k == SEO_COLUMNS - 1)
                         {
-                            seo_command_r[i][j][k].V1 = owseo_DtoC_utor[j][k].ows[3].Vn;
+                            seo_command_r[i][j][k].V1 = owseo_DtoC_utor[i][j][k].ows[3].Vn;
                             seo_command_r[i][j][k].V2 = owseo_command_r[i][j][k - 1].ows[3].Vn;
                             seo_command_r[i][j][k].V3 = owseo_CtoD_r[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_r[i][j][k].V4 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路から
@@ -933,7 +927,7 @@ int main()
                         }
                         else
                         {
-                            seo_command_r[i][j][k].V1 = owseo_DtoC_utor[j][k].ows[3].Vn;         // 上方向衝突判定回路から
+                            seo_command_r[i][j][k].V1 = owseo_DtoC_utor[i][j][k].ows[3].Vn;      // 上方向衝突判定回路から
                             seo_command_r[i][j][k].V2 = owseo_command_r[i][j][k - 1].ows[3].Vn;  // 伝わってくる側
                             seo_command_r[i][j][k].V3 = owseo_command_r[i][j][k].ows[0].Vn;      // 伝える側
                             seo_command_r[i][j][k].V4 = owseo_CtoD_r[i][j - 1][k - 1].ows[0].Vn; // 右方向衝突判定回路へ
@@ -952,8 +946,9 @@ int main()
                 {
                     seo_detection_r[i][j].V1 = owseo_CtoD_r[0][i - 1][j - 1].ows[3].Vn;
                     seo_detection_r[i][j].V2 = owseo_CtoD_r[1][i - 1][j - 1].ows[3].Vn;
-                    seo_detection_r[i][j].V3 = owseo_DtoC_rtod[i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_r[i][j], 3, C, Cjs3);
+                    seo_detection_r[i][j].V3 = owseo_DtoC_rtod[0][i][j].ows[0].Vn;
+                    seo_detection_r[i][j].V4 = owseo_DtoC_rtod[1][i][j].ows[0].Vn;
+                    seo_Pcalc(&seo_detection_r[i][j], 4, C, Cjs4);
                 }
             }
 
@@ -982,17 +977,13 @@ int main()
             }
 
             // 下衝突判定から左命令の一方通行計算
-            for (i = 1; i < SEO_ROWS; i++)
+            for (i = 0; i < SEO_PARTICLES; i++)
             {
-                for (j = 1; j < SEO_COLUMNS; j++)
+                for (j = 1; j < SEO_ROWS; j++)
                 {
-                    if (i % 2 == 0)
+                    for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_dtol[i][j], C, Cjs2, Cjs3, seo_detection_d[i][j].Vn, seo_command_l[0][i][j].Vn);
-                    }
-                    else
-                    {
-                        oneway_4seo_calcPara(&owseo_DtoC_dtol[i][j], C, Cjs2, Cjs3, seo_detection_d[i][j].Vn, seo_command_l[1][i][j].Vn);
+                        oneway_4seo_calcPara(&owseo_DtoC_dtol[i][j][k], C, Cjs2, Cjs3, seo_detection_d[i][j].Vn, seo_command_l[i][j][k].Vn);
                     }
                 }
             }
@@ -1022,17 +1013,13 @@ int main()
             }
 
             // 左衝突判定から上命令の一方通行計算
-            for (i = 1; i < SEO_ROWS; i++)
+            for (i = 0; i < SEO_PARTICLES; i++)
             {
-                for (j = 1; j < SEO_COLUMNS; j++)
+                for (j = 1; j < SEO_ROWS; j++)
                 {
-                    if (j % 2 == 0)
+                    for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_ltou[i][j], C, Cjs2, Cjs3, seo_detection_l[i][j].Vn, seo_command_u[0][i][j].Vn);
-                    }
-                    else
-                    {
-                        oneway_4seo_calcPara(&owseo_DtoC_ltou[i][j], C, Cjs2, Cjs3, seo_detection_l[i][j].Vn, seo_command_u[1][i][j].Vn);
+                        oneway_4seo_calcPara(&owseo_DtoC_ltou[i][j][k], C, Cjs2, Cjs3, seo_detection_l[i][j].Vn, seo_command_u[i][j][k].Vn);
                     }
                 }
             }
@@ -1062,58 +1049,50 @@ int main()
             }
 
             // 上衝突判定から右命令一方通行計算
-            for (i = 1; i < SEO_ROWS; i++)
+            for (i = 0; i < SEO_PARTICLES; i++)
             {
-                for (j = 1; j < SEO_COLUMNS; j++)
+                for (j = 1; j < SEO_ROWS; j++)
                 {
-                    if (i % 2 == 0)
+                    for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_utor[i][j], C, Cjs2, Cjs3, seo_detection_u[i][j].Vn, seo_command_r[0][i][j].Vn);
-                    }
-                    else
-                    {
-                        oneway_4seo_calcPara(&owseo_DtoC_utor[i][j], C, Cjs2, Cjs3, seo_detection_u[i][j].Vn, seo_command_r[1][i][j].Vn);
+                        oneway_4seo_calcPara(&owseo_DtoC_utor[i][j][k], C, Cjs2, Cjs3, seo_detection_u[i][j].Vn, seo_command_r[i][j][k].Vn);
                     }
                 }
             }
-        }
 
-        // 右命令の一方通行計算
-        for (i = 0; i < SEO_PARTICLES; i++)
-        {
-            for (j = 0; j < OWSEO_ROWS; j++)
+            // 右命令の一方通行計算
+            for (i = 0; i < SEO_PARTICLES; i++)
             {
-                for (k = 0; k < OWSEO_COLUMNS - 1; k++)
+                for (j = 0; j < OWSEO_ROWS; j++)
                 {
-                    oneway_4seo_calcPara(&owseo_command_r[i][j][k], C, Cjs2, Cjs3, seo_command_r[i][j][k].Vn, seo_command_r[i][j][k + 1].Vn);
+                    for (k = 0; k < OWSEO_COLUMNS - 1; k++)
+                    {
+                        oneway_4seo_calcPara(&owseo_command_r[i][j][k], C, Cjs2, Cjs3, seo_command_r[i][j][k].Vn, seo_command_r[i][j][k + 1].Vn);
+                    }
                 }
             }
-        }
 
-        // 右命令から衝突判定の一方通行計算
-        for (i = 0; i < SEO_PARTICLES; i++)
-        {
-            for (j = 0; j < SEO_ROWS; j++)
+            // 右命令から衝突判定の一方通行計算
+            for (i = 0; i < SEO_PARTICLES; i++)
             {
-                for (k = 0; k < SEO_COLUMNS - 1; k++)
+                for (j = 0; j < SEO_ROWS; j++)
                 {
-                    oneway_4seo_calcPara(&owseo_CtoD_r[i][j][k], C, Cjs2, Cjs3, seo_command_r[i][j + 1][k + 1].Vn, seo_detection_r[j + 1][k + 1].Vn);
+                    for (k = 0; k < SEO_COLUMNS - 1; k++)
+                    {
+                        oneway_4seo_calcPara(&owseo_CtoD_r[i][j][k], C, Cjs2, Cjs3, seo_command_r[i][j + 1][k + 1].Vn, seo_detection_r[j + 1][k + 1].Vn);
+                    }
                 }
             }
-        }
 
-        // 右衝突判定から下命令の一方通行計算
-        for (i = 1; i < SEO_ROWS; i++)
-        {
-            for (j = 1; j < SEO_COLUMNS; j++)
+            // 右衝突判定から下命令の一方通行計算
+            for (i = 0; i < SEO_PARTICLES; i++)
             {
-                if (j % 2 == 0)
+                for (j = 1; j < SEO_ROWS; j++)
                 {
-                    oneway_4seo_calcPara(&owseo_DtoC_rtod[i][j], C, Cjs2, Cjs3, seo_detection_r[i][j].Vn, seo_command_d[0][i][j].Vn);
-                }
-                else
-                {
-                    oneway_4seo_calcPara(&owseo_DtoC_rtod[i][j], C, Cjs2, Cjs3, seo_detection_r[i][j].Vn, seo_command_d[1][i][j].Vn);
+                    for (k = 1; k < SEO_COLUMNS; k++)
+                    {
+                        oneway_4seo_calcPara(&owseo_DtoC_rtod[i][j][k], C, Cjs2, Cjs3, seo_detection_r[i][j].Vn, seo_command_d[i][j][k].Vn);
+                    }
                 }
             }
         }
@@ -1145,7 +1124,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_d[i][j], 3, C, Cjs3); // 足3
+                seo_Ecalc(&seo_detection_d[i][j], 4, C, Cjs4); // 足4
             }
         }
 
@@ -1173,7 +1152,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_l[i][j], 3, C, Cjs3); // 足3
+                seo_Ecalc(&seo_detection_l[i][j], 4, C, Cjs4); // 足4
             }
         }
 
@@ -1201,7 +1180,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_u[i][j], 3, C, Cjs3); // 足2
+                seo_Ecalc(&seo_detection_u[i][j], 4, C, Cjs4); // 足4
             }
         }
 
@@ -1229,7 +1208,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_r[i][j], 3, C, Cjs3); // 足3
+                seo_Ecalc(&seo_detection_r[i][j], 4, C, Cjs4); // 足4
             }
         }
 
@@ -1258,11 +1237,14 @@ int main()
         }
 
         // 下衝突判定から左命令一方通行エネルギー計算
-        for (i = 1; i < SEO_ROWS; i++)
+        for (i = 0; i < SEO_PARTICLES; i++)
         {
-            for (j = 1; j < SEO_COLUMNS; j++)
+            for (j = 1; j < SEO_ROWS; j++)
             {
-                oneway_4seo_calcEner(&owseo_DtoC_dtol[i][j], C, Cjs2, Cjs3);
+                for (k = 1; k < SEO_COLUMNS; k++)
+                {
+                    oneway_4seo_calcEner(&owseo_DtoC_dtol[i][j][k], C, Cjs2, Cjs3);
+                }
             }
         }
 
@@ -1291,11 +1273,14 @@ int main()
         }
 
         // 左衝突判定から上命令の振動子エネルギー計算
-        for (i = 1; i < SEO_ROWS; i++)
+        for (i = 0; i < SEO_PARTICLES; i++)
         {
-            for (j = 1; j < SEO_COLUMNS; j++)
+            for (j = 1; j < SEO_ROWS; j++)
             {
-                oneway_4seo_calcEner(&owseo_DtoC_ltou[i][j], C, Cjs2, Cjs3);
+                for (k = 1; k < SEO_COLUMNS; k++)
+                {
+                    oneway_4seo_calcEner(&owseo_DtoC_ltou[i][j][k], C, Cjs2, Cjs3);
+                }
             }
         }
 
@@ -1324,11 +1309,14 @@ int main()
         }
 
         // 上衝突判定から右命令のエネルギー計算
-        for (i = 1; i < SEO_ROWS; i++)
+        for (i = 0; i < SEO_PARTICLES; i++)
         {
-            for (j = 1; j < SEO_COLUMNS; j++)
+            for (j = 1; j < SEO_ROWS; j++)
             {
-                oneway_4seo_calcEner(&owseo_DtoC_utor[i][j], C, Cjs2, Cjs3);
+                for (k = 1; k < SEO_COLUMNS; k++)
+                {
+                    oneway_4seo_calcEner(&owseo_DtoC_utor[i][j][k], C, Cjs2, Cjs3);
+                }
             }
         }
 
@@ -1357,11 +1345,14 @@ int main()
         }
 
         // 右衝突判定から下命令の振動子エネルギー計算
-        for (i = 1; i < SEO_ROWS; i++)
+        for (i = 0; i < SEO_PARTICLES; i++)
         {
-            for (j = 1; j < SEO_COLUMNS; j++)
+            for (j = 1; j < SEO_ROWS; j++)
             {
-                oneway_4seo_calcEner(&owseo_DtoC_rtod[i][j], C, Cjs2, Cjs3);
+                for (k = 1; k < SEO_COLUMNS; k++)
+                {
+                    oneway_4seo_calcEner(&owseo_DtoC_rtod[i][j][k], C, Cjs2, Cjs3);
+                }
             }
         }
 
@@ -1399,7 +1390,7 @@ int main()
         owseo_p[2] = oneway_4seo_3dimWt(owseo_CtoD_d[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, Rj);
 
         // 下衝突判定から左命令の一方通行トンネル計算
-        owseo_p[3] = oneway_4seo_3dimWt(owseo_DtoC_dtol[0], 1, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[3] = oneway_4seo_3dimWt(owseo_DtoC_dtol[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 左命令一方通行トンネル計算
         owseo_p[4] = oneway_4seo_3dimWt(owseo_command_l[0][0], SEO_PARTICLES, OWSEO_ROWS, OWSEO_COLUMNS - 1, Rj);
@@ -1408,7 +1399,7 @@ int main()
         owseo_p[5] = oneway_4seo_3dimWt(owseo_CtoD_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, Rj);
 
         // 左衝突判定から上命令の一方通行トンネル計算
-        owseo_p[6] = oneway_4seo_3dimWt(owseo_DtoC_ltou[0], 1, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[6] = oneway_4seo_3dimWt(owseo_DtoC_ltou[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 上命令一方通行トンネル計算
         owseo_p[7] = oneway_4seo_3dimWt(owseo_command_u[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, Rj);
@@ -1417,7 +1408,7 @@ int main()
         owseo_p[8] = oneway_4seo_3dimWt(owseo_CtoD_u[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, Rj);
 
         // 上衝突判定から右命令の一方通行トンネル計算
-        owseo_p[9] = oneway_4seo_3dimWt(owseo_DtoC_utor[0], 1, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[9] = oneway_4seo_3dimWt(owseo_DtoC_utor[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 右命令一方通行トンネル計算
         owseo_p[10] = oneway_4seo_3dimWt(owseo_command_r[0][0], SEO_PARTICLES, OWSEO_ROWS, OWSEO_COLUMNS - 1, Rj);
@@ -1426,7 +1417,7 @@ int main()
         owseo_p[11] = oneway_4seo_3dimWt(owseo_CtoD_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, Rj);
 
         // 右衝突判定から下命令の一方通行トンネル計算
-        owseo_p[12] = oneway_4seo_3dimWt(owseo_DtoC_rtod[0], 1, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[12] = oneway_4seo_3dimWt(owseo_DtoC_rtod[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
         /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         /*トンネルと電荷チャージ--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1468,16 +1459,16 @@ int main()
         // 一方通行のチャージ
         oneway_4seo_3dimCharge(owseo_command_d[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, R, dt);
         oneway_4seo_3dimCharge(owseo_CtoD_d[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_dtol[0], 1, SEO_ROWS, SEO_COLUMNS, R, dt);
+        oneway_4seo_3dimCharge(owseo_DtoC_dtol[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
         oneway_4seo_3dimCharge(owseo_command_l[0][0], SEO_PARTICLES, OWSEO_COLUMNS, OWSEO_ROWS - 1, R, dt);
         oneway_4seo_3dimCharge(owseo_CtoD_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_ltou[0], 1, SEO_ROWS, SEO_COLUMNS, R, dt);
+        oneway_4seo_3dimCharge(owseo_DtoC_ltou[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
         oneway_4seo_3dimCharge(owseo_command_u[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, R, dt);
         oneway_4seo_3dimCharge(owseo_CtoD_u[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_utor[0], 1, SEO_ROWS, SEO_COLUMNS, R, dt);
+        oneway_4seo_3dimCharge(owseo_DtoC_utor[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
         oneway_4seo_3dimCharge(owseo_command_r[0][0], SEO_PARTICLES, OWSEO_COLUMNS, OWSEO_ROWS - 1, R, dt);
         oneway_4seo_3dimCharge(owseo_CtoD_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_rtod[0], 1, SEO_ROWS, SEO_COLUMNS, R, dt);
+        oneway_4seo_3dimCharge(owseo_DtoC_rtod[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
 
         // dtのリセット
         dt = 0.1;
