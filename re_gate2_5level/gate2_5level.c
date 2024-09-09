@@ -6,6 +6,7 @@
 #define OWSEO_COLUMNS 16 // 一方通行回路 x
 #define OWSEO_ROWS 10    // 一方通行回路 y
 #define R 1.2            // 抵抗値[GΩ]
+#define Rsmall 1.2       // 小さめの抵抗値[GΩ]
 #define Rj 0.001         // トンネル抵抗[GΩ]
 #define C 2              // 接合容量[aF]
 #define Vd_seo 0.004     // 振動子のバイアス電圧
@@ -843,7 +844,7 @@ int main()
                             seo_command_u[i][j][k].V3 = owseo_CtoD_u[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_u[i][j][k].V4 = seo_command_l[CtoC][j][k].Vn; // 左方向命令回路から
                             seo_command_u[i][j][k].V5 = seo_command_r[CtoC][j][k].Vn; // 右方向命令回路へ
-                            seo_Pcalc(&seo_command_u[i][j][k], 5, C, Cjs3);
+                            seo_Pcalc(&seo_command_u[i][j][k], 5, C, Cjs5);
                         }
                         else
                         {
@@ -1455,13 +1456,13 @@ int main()
 
         // トンネルチャージとdtのリセット
         // 振動子のチャージ
-        seo_3dimcharge(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        seo_3dimcharge(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
         seo_2dimCharge(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, R, dt);
-        seo_3dimcharge(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        seo_3dimcharge(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
         seo_2dimCharge(seo_detection_l[0], SEO_ROWS, SEO_COLUMNS, R, dt);
-        seo_3dimcharge(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        seo_3dimcharge(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
         seo_2dimCharge(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, R, dt);
-        seo_3dimcharge(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        seo_3dimcharge(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
         seo_2dimCharge(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, R, dt);
 
         // 一方通行のチャージ
