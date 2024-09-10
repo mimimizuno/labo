@@ -1,0 +1,13 @@
+set size ratio 1.1
+set xrange[1:16]
+set yrange[1:10]
+set zrange[-0.005:0.005]
+set cbrange[-0.005:0.005]
+unset key
+set view map
+set palette define (0"black",10"white")
+
+do for [i=1000:2000] {
+    print i
+    splot "detection_r.txt" index i w pm3d
+}
