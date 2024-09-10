@@ -5,8 +5,8 @@
 #define SEO_ROWS 10      // 振動子 y
 #define OWSEO_COLUMNS 16 // 一方通行回路 x
 #define OWSEO_ROWS 10    // 一方通行回路 y
-#define R 1.2            // 抵抗値[GΩ]
-#define Rsmall 1.2       // 小さめの抵抗値[GΩ]
+#define R 1.4            // 抵抗値[GΩ]
+#define Rsmall 0.8       // 小さめの抵抗値[GΩ]
 #define Rj 0.001         // トンネル抵抗[GΩ]
 #define C 2              // 接合容量[aF]
 #define Vd_seo 0.004     // 振動子のバイアス電圧
@@ -685,13 +685,11 @@ int main()
         fprintcollisionlay(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, fp6, t, pt);
         fprintlaycolumn(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp7, t, pt);
         fprintcollisionlay(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, fp8, t, pt);
-        // fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_d[0][0][8].Vn, seo_command_d[0][9][8].Vn, seo_command_d[1][0][10].Vn, seo_command_d[1][9][10].Vn);
-        // fprintf(fp9, "%f %f %f %f %f %f\n", t, seo_command_l[0][2][12].Vn, owseo_DtoC_dtol[2][12].ows[3].Vn, owseo_command_l[0][2][10].ows[3].Vn, owseo_command_l[0][2][11].ows[0].Vn, owseo_CtoD_l[0][1][11].ows[0].Vn);
-        // fprintf(fp9, "%f %f %f %f %f %f\n", t, seo_command_l[0][6][8].Vn, owseo_DtoC_dtol[6][8].ows[3].Vn, owseo_command_l[0][6][6].ows[3].Vn, owseo_command_l[0][6][7].ows[0].Vn, owseo_CtoD_l[0][5][7].ows[0].Vn);
-        // fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_d[0][2][10].Vn, owseo_command_d[0][0][10].ows[3].Vn, owseo_command_d[0][0][10].ows[0].Vn, seo_command_d[0][1][10].Vn);
-        // fprintf(fp9,"%f %f %f %f %f\n",t,seo_command_d[1][2][5].Vn,owseo_command_d[1][0][5].ows[3].Vn,owseo_command_d[1][0][5].ows[0].Vn,seo_command_d[1][1][5].Vn);
-        // fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_u[0][3][8].Vn, owseo_command_u[0][1][8].ows[3].Vn, owseo_command_u[0][1][8].ows[0].Vn, seo_command_u[0][2][8].Vn);
-        fprintf(fp9, "%f %f %f %f %f\n", t, seo_command_d[0][2][8].Vn, owseo_command_d[0][0][8].ows[3].Vd, owseo_command_d[0][0][8].ows[0].Vd, seo_command_d[0][1][8].Vn);
+        // fprintf(fp9, "%f %f %f %f %f %f\n", t, seo_command_d[0][6][8].Vn, seo_command_d[1][6][8].Vn, seo_detection_d[6][8].Vn, seo_command_l[0][6][8].Vn, seo_command_l[1][6][8].Vn);
+        // fprintf(fp9, "%f %f %f %f %f\n", t, seo_detection_d[6][8].Vn, owseo_DtoC_dtol[0][6][8].ows[0].Vn, owseo_DtoC_dtol[0][6][8].ows[3].Vn, seo_command_l[0][6][8].Vn);
+        // fprintf(fp9, "%f %f %f %f\n", t, owseo_DtoC_dtol[1][6][8].ows[3].Vn, seo_command_l[1][6][8].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn);
+        // fprintf(fp9, "%f %f %f %f %f %f %f\n", t, seo_command_l[1][6][8].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[1].Vn, owseo_CtoD_l[1][5][7].ows[2].Vn, owseo_CtoD_l[1][5][7].ows[3].Vn, seo_detection_l[6][8].Vn);
+        fprintf(fp9, "%f %f %f %f %f %f %f %f\n", t, seo_command_l[1][6][8].Vn, owseo_DtoC_dtol[1][6][8].ows[3].Vn, owseo_command_l[1][6][7].ows[3].Vn, owseo_command_l[1][6][8].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn,seo_command_d[0][6][8].Vn, seo_command_u[0][6][8].Vn);
         if (pt <= t)
         {
             pt += 0.1;
@@ -781,7 +779,7 @@ int main()
                 }
             }
 
-            // 左命令計算 (jで場合分け)
+            // 左命令計算
             for (i = 0; i < SEO_PARTICLES; i++) // z
             {
                 for (j = 1; j < SEO_ROWS; j++) // y
@@ -983,7 +981,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_dtol[i][j][k], C, Cjs2, Cjs3, seo_detection_d[i][j].Vn, seo_command_l[i][j][k].Vn);
+                        oneway_4seo_calcPara(&owseo_DtoC_dtol[i][j][k], C, Cjs2, Cjs3, seo_detection_d[j][k].Vn, seo_command_l[i][j][k].Vn);
                     }
                 }
             }
@@ -1019,7 +1017,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_ltou[i][j][k], C, Cjs2, Cjs3, seo_detection_l[i][j].Vn, seo_command_u[i][j][k].Vn);
+                        oneway_4seo_calcPara(&owseo_DtoC_ltou[i][j][k], C, Cjs2, Cjs3, seo_detection_l[j][k].Vn, seo_command_u[i][j][k].Vn);
                     }
                 }
             }
@@ -1055,7 +1053,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_utor[i][j][k], C, Cjs2, Cjs3, seo_detection_u[i][j].Vn, seo_command_r[i][j][k].Vn);
+                        oneway_4seo_calcPara(&owseo_DtoC_utor[i][j][k], C, Cjs2, Cjs3, seo_detection_u[j][k].Vn, seo_command_r[i][j][k].Vn);
                     }
                 }
             }
@@ -1091,7 +1089,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_rtod[i][j][k], C, Cjs2, Cjs3, seo_detection_r[i][j].Vn, seo_command_d[i][j][k].Vn);
+                        oneway_4seo_calcPara(&owseo_DtoC_rtod[i][j][k], C, Cjs2, Cjs3, seo_detection_r[j][k].Vn, seo_command_d[i][j][k].Vn);
                     }
                 }
             }

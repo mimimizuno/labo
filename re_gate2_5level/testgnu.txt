@@ -1,0 +1,43 @@
+#unset key
+#set title 'no'
+set terminal qt font "Arial,10"
+set xl 't[ns]'
+set yl 'V[V]'
+
+#command_d[0][6][8]の伝搬テスト
+#p 'test.txt' u 1:2 title 'commandd[0][6][8]' w steps lw 3,\
+#  'test.txt' u 1:3 title 'commandd[1][6][8]' w steps lw 3,\
+#  'test.txt' u 1:4 title 'detecd[6][8]' w steps lw 3,\
+#  'test.txt' u 1:5 title 'commandl[0][6][8]' w steps lw 3,\
+#  'test.txt' u 1:6 title 'commandl[1][6][8]' w steps lw 3,\
+
+#detection_d[6][8]の伝搬テスト
+#p 'test.txt' u 1:2 title 'detec[6][8]' w steps lw 3,\ 
+#  'test.txt' u 1:3 title 'oneway[0][6][8].ows[0]' w steps lw 3,\
+#  'test.txt' u 1:4 title 'oneway[0][6][8].ows[3]' w steps lw 3,\
+#  'test.txt' u 1:5 title 'commandl[0][6][8]' w steps lw 3,\
+
+#command_l[1][6][8]の伝搬テスト
+#owseo_DtoC_dtol[1][6][8].ows[3].Vn, seo_command_l[1][6][8].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn
+#p 'test.txt' u 1:2 title 'oneway[1][6][8].ows[3]' w steps lw 3,\
+#  'test.txt' u 1:3 title 'command_l[1][6][8]' w steps lw 3,\
+#  'test.txt' u 1:4 title 'oneway[1][5][7].ows[0]' w steps lw 3,\
+
+#command_l[1][6][8]からdetection_lの逆流確認
+#seo_command_l[1][6][8].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[1].Vn, owseo_CtoD_l[1][5][7].ows[2].Vn, owseo_CtoD_l[1][5][7].ows[3].Vn, seo_detection_l[6][8].Vn
+#p 'test.txt' u 1:2 title 'commandl[1][6][8]' w steps lw 3,\
+#  'test.txt' u 1:3 title 'oneway[1][5][7].ows[0]' w steps lw 3,\
+#  'test.txt' u 1:4 title 'oneway[1][5][7].ows[1]' w steps lw 3,\
+#  'test.txt' u 1:5 title 'oneway[1][5][7].ows[2]' w steps lw 3,\
+#  'test.txt' u 1:6 title 'oneway[1][5][7].ows[3]' w steps lw 3,\
+#  'test.txt' u 1:7 title 'detecl[6][8]' w steps lw 3,\
+
+#command_l[1][6][8]がどこからトリガ加わってるのか
+#seo_command_l[1][6][8].Vn, owseo_DtoC_dtol[1][6][8].ows[3].Vn, owseo_command_l[1][6][7].ows[3].Vn, owseo_command_l[1][6][8].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn,seo_command_d[0][6][8].Vn, seo_command_u[0][6][8].Vn
+p 'test.txt' u 1:2 title 'commandl[1][6][8]' w steps lw 3,\
+  'test.txt' u 1:3 title 'owseo_DtoC_dtol[1][6][8].ows[3]' w steps lw 3,\
+  'test.txt' u 1:4 title 'owseo_command_l[1][6][7].ows[3]' w steps lw 3,\
+  'test.txt' u 1:5 title 'owseo_command_l[1][6][8].ows[0]' w steps lw 3,\
+  'test.txt' u 1:6 title 'owseo_CtoD_l[1][5][7].ows[0]' w steps lw 3,\
+  'test.txt' u 1:7 title 'seo_command_d[0][6][8]' w steps lw 3,\
+  'test.txt' u 1:8 title 'seo_command_u[0][6][8]' w steps lw 3,\
