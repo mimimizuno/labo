@@ -5,7 +5,7 @@
 #define SEO_ROWS 10      // 振動子 y
 #define OWSEO_COLUMNS 16 // 一方通行回路 x
 #define OWSEO_ROWS 10    // 一方通行回路 y
-#define R 1.4            // 抵抗値[GΩ]
+#define R 1.5            // 抵抗値[GΩ]
 #define Rsmall 0.8       // 小さめの抵抗値[GΩ]
 #define Rj 0.001         // トンネル抵抗[GΩ]
 #define C 2              // 接合容量[aF]
@@ -411,6 +411,10 @@ int main()
             {
                 seo_detection_u[i][j].Vd = Vd_seo; //[V]
             }
+            else if ((i == 8) && (j == 3))
+            {
+                seo_detection_u[i][j].Vd = Vd_seo; //[V]
+            }
         }
     }
 
@@ -689,7 +693,8 @@ int main()
         // fprintf(fp9, "%f %f %f %f %f\n", t, seo_detection_d[6][8].Vn, owseo_DtoC_dtol[0][6][8].ows[0].Vn, owseo_DtoC_dtol[0][6][8].ows[3].Vn, seo_command_l[0][6][8].Vn);
         // fprintf(fp9, "%f %f %f %f\n", t, owseo_DtoC_dtol[1][6][8].ows[3].Vn, seo_command_l[1][6][8].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn);
         // fprintf(fp9, "%f %f %f %f %f %f %f\n", t, seo_command_l[1][6][8].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[1].Vn, owseo_CtoD_l[1][5][7].ows[2].Vn, owseo_CtoD_l[1][5][7].ows[3].Vn, seo_detection_l[6][8].Vn);
-        fprintf(fp9, "%f %f %f %f %f %f %f %f\n", t, seo_command_l[1][6][8].Vn, owseo_DtoC_dtol[1][6][8].ows[3].Vn, owseo_command_l[1][6][7].ows[3].Vn, owseo_command_l[1][6][8].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn,seo_command_d[0][6][8].Vn, seo_command_u[0][6][8].Vn);
+        // fprintf(fp9, "%f %f %f %f %f %f %f %f\n", t, seo_command_l[1][6][8].Vn, owseo_DtoC_dtol[1][6][8].ows[3].Vn, owseo_command_l[1][6][7].ows[3].Vn, owseo_command_l[1][6][8].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn,seo_command_d[0][6][8].Vn, seo_command_u[0][6][8].Vn);
+        fprintf(fp9, "%f %f %f %f %f %f %f\n", t, seo_detection_l[6][2].Vn, seo_command_u[0][6][2].Vn, seo_command_u[1][6][2].Vn, seo_detection_l[6][3].Vn, seo_command_u[0][6][3].Vn, seo_command_u[1][6][3].Vn);
         if (pt <= t)
         {
             pt += 0.1;
@@ -706,8 +711,8 @@ int main()
         {
             seo_command_d[0][0][8].Vn = 0.006;  // 入力A
             seo_command_d[1][0][10].Vn = 0.006; // 入力B
-            seo_command_d[0][0][12].Vn = 0.006; // 入力Aバー
-            seo_command_d[1][0][14].Vn = 0.006; // 入力Bバー
+            seo_command_d[0][0][12].Vn = 0; // 入力Aバー
+            seo_command_d[1][0][14].Vn = 0; // 入力Bバー
         }
         else
         {
