@@ -34,10 +34,19 @@ set yl 'V[V]'
 
 #command_l[1][6][8]がどこからトリガ加わってるのか
 #seo_command_l[1][6][8].Vn, owseo_DtoC_dtol[1][6][8].ows[3].Vn, owseo_command_l[1][6][7].ows[3].Vn, owseo_command_l[1][6][8].ows[0].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn,seo_command_d[0][6][8].Vn, seo_command_u[0][6][8].Vn
-p 'test.txt' u 1:2 title 'commandl[1][6][8]' w steps lw 3,\
-  'test.txt' u 1:3 title 'owseo_DtoC_dtol[1][6][8].ows[3]' w steps lw 3,\
-  'test.txt' u 1:4 title 'owseo_command_l[1][6][7].ows[3]' w steps lw 3,\
-  'test.txt' u 1:5 title 'owseo_command_l[1][6][8].ows[0]' w steps lw 3,\
-  'test.txt' u 1:6 title 'owseo_CtoD_l[1][5][7].ows[0]' w steps lw 3,\
-  'test.txt' u 1:7 title 'seo_command_d[0][6][8]' w steps lw 3,\
-  'test.txt' u 1:8 title 'seo_command_u[0][6][8]' w steps lw 3,\
+#p 'test.txt' u 1:2 title 'commandl[1][6][8]' w steps lw 3,\
+#  'test.txt' u 1:3 title 'owseo_DtoC_dtol[1][6][8].ows[3]' w steps lw 3,\
+#  'test.txt' u 1:4 title 'owseo_command_l[1][6][7].ows[3]' w steps lw 3,\
+#  'test.txt' u 1:5 title 'owseo_command_l[1][6][8].ows[0]' w steps lw 3,\
+#  'test.txt' u 1:6 title 'owseo_CtoD_l[1][5][7].ows[0]' w steps lw 3,\
+#  'test.txt' u 1:7 title 'seo_command_d[0][6][8]' w steps lw 3,\
+#  'test.txt' u 1:8 title 'seo_command_u[0][6][8]' w steps lw 3,\
+
+#command_uの不具合確認
+#seo_detection_l[6][2].Vn, seo_command_u[0][6][2].Vn, seo_command_u[1][6][2].Vn, seo_detection_l[6][3].Vn, seo_command_u[0][6][3].Vn, seo_command_u[1][6][3].Vn
+p 'test.txt' u 1:2 title 'seo_detection_l[6][2]' w steps lw 3,\
+  'test.txt' u 1:3 title 'seo_command_u[0][6][2]' w steps lw 3,\
+  'test.txt' u 1:4 title 'seo_command_u[1][6][2]' w steps lw 3,\
+  'test.txt' u 1:5 title 'seo_detection_l[6][3]' w steps lw 3,\
+  'test.txt' u 1:6 title 'seo_command_u[0][6][3]' w steps lw 3,\
+  'test.txt' u 1:7 title 'seo_command_u[1][6][3]' w steps lw 3,\
