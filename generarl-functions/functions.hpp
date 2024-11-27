@@ -12,8 +12,20 @@ using namespace std;
 
 class SEO {
 private:
+    // クラス共通のidカウンタ
+    static int idCounter;
+    // id
+    int id;
+    // 抵抗
+    const double R;
+    // トンネル抵抗
+    const double Rj;
+    // トンネル容量
+    const double Cj;
+    // 接合容量
+    const double C;
     // 足の数
-    int legs;
+    const int legs;
     // バイアス電圧
     double Vd;
     // ノード電圧
