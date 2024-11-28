@@ -73,6 +73,11 @@ public:
     }
 
     //-----------ゲッター------------//
+    // IDを取得
+    int getID() const {
+        return id;
+    }
+    
     // ノード電圧を取得
     double getNodeVoltage() const {
         return Vn;
@@ -111,7 +116,7 @@ public:
         }
     }
 
-    double getVoltage() const { return Vn; }
+    
 };
 
 #endif // SEO_HPP
