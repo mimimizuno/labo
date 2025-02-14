@@ -203,6 +203,29 @@ void oneway_4seo_3dimCharge(oneway_4seo *p, int particles, int rows, int columns
 // 一方通行の待ち時間計算(&onewayseo,OWSEO_PARTICLES,OWSEO_ROWS,OWSEO_COLUMNS,Rj)(三次元配列)
 oneway_4seo *oneway_4seo_3dimWt(oneway_4seo *p, int particles, int rows, int columns, double Rj);
 
+/*--------------------------------------------------一方通行(多重振動子4個)-------------------------------------------------------------*/
+
+typedef struct
+{
+    multiseo ows[4];
+    int locate;
+} multi_oneway_4seo;
+
+// 一方通行のVd割り当て(&multi_oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3)
+void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3);
+
+// 一方通行のパラメータ計算(&multi_oneway_4seo,Cs,Cjs足2,Cj足3,左端のVn,右端のVn)
+void multi_oneway_4seo_calcPara(multi_oneway_4seo *p, double Cs, double Cjs2, double Cjs3, double Vn0, double Vn1);
+
+// 一方通行のエネルギー計算(&multi_oneway_4seo,Cs,Cjs足2,Cj足3)
+void multi_oneway_4seo_calcEner(multi_oneway_4seo *p, double Cs, double Cjs2, double Cjs3);
+
+// 一方通行の電荷チャージ(&multi_oneway_4seo,OWSEO_PARTICLES,OWSEO_ROWS,OWSEO_COLUMNS,R,dt)(三次元配列)
+void multi_oneway_4seo_3dimCharge(multi_oneway_4seo *p, int particles, int rows, int columns, double R, double dt);
+
+// 一方通行の待ち時間計算(&multi_onewayseo,OWSEO_PARTICLES,OWSEO_ROWS,OWSEO_COLUMNS,Rj)(三次元配列)
+multi_oneway_4seo *multi_oneway_4seo_3dimWt(multi_oneway_4seo *p, int particles, int rows, int columns, double Rj);
+
 /*--------------------------------------------------汎用-----------------------------------------------------------------------*/
 // 0から1の間の乱数生成
 double Random(void);

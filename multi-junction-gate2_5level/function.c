@@ -439,8 +439,8 @@ multiseo *multiseo_2dimwt(multiseo *p, int rows, int columns, double Rj)
                 {
                     for(int rep=0; rep < p->multi_num - abs(p->tunnel_num);rep++)
                     {
-                        double mj_tunnele_wt = (e * e * Rj / p->dE[i - 1]) * log(1 / Random());
-                        p->wt[i] = min(mj_tunnele_wt, p->wt[i]);
+                        double mj_tunnele_wt = (e * e * Rj / p->dE[j - 1]) * log(1 / Random());
+                        p->wt[j] = min(mj_tunnele_wt, p->wt[j]);
                     }
                 }
                 else
@@ -481,8 +481,8 @@ multiseo *multiseo_3dimwt(multiseo *p, int particles, int rows, int columns, dou
                 {
                     for(int rep=0; rep < p->multi_num - abs(p->tunnel_num);rep++)
                     {
-                        double mj_tunnele_wt = (e * e * Rj / p->dE[i - 1]) * log(1 / Random());
-                        p->wt[i] = min(mj_tunnele_wt, p->wt[i]);
+                        double mj_tunnele_wt = (e * e * Rj / p->dE[j - 1]) * log(1 / Random());
+                        p->wt[j] = min(mj_tunnele_wt, p->wt[j]);
                     }
                 }
                 else
@@ -1077,6 +1077,140 @@ oneway_4seo *oneway_4seo_3dimWt(oneway_4seo *p, int particles, int rows, int col
     }
     return a;
 }
+
+/*--------------------------------------------------一方通行(多重振動子4個)-------------------------------------------------------------*/
+// 一方通行のVd割り当て(&multi_oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3)
+void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        if (i == 1 || i == 2)
+        {
+            p->ows[i].Vd = Vd;
+        }
+        else if (i == 0 && direction == 0)
+        { // 一方通行　左
+            p->ows[i].Vd = -Vd + ((Cs * e) / ((3 * Cs + Cjs3) * (2 * Cs + Cjs2)));
+        }
+        else if (i == 3 && direction == 0)
+        {
+            p->ows[i].Vd = -Vd;
+        }
+        else if (i == 0 && direction == 1)
+        { // 一方通行　右
+            p->ows[i].Vd = -Vd;
+        }
+        else if (i == 3 && direction == 1)
+        {
+            p->ows[i].Vd = -Vd + ((Cs * e) / ((3 * Cs + Cjs3) * (2 * Cs + Cjs2)));
+        }
+    }
+}
+
+// 一方通行のパラメータ計算(&multi_oneway_4seo,Cs,Cjs足2,Cj足3,左端のVn,右端のVn)
+void multi_oneway_4seo_calcPara(multi_oneway_4seo *p, double Cs, double Cjs2, double Cjs3, double Vn0, double Vn1)
+{
+    int i = 0;
+    for (i = 0; i < 4; i++)
+    {
+        if (i == 0) // 足3
+        {
+            p->ows[i].V1 = Vn0;
+            p->ows[i].V2 = p->ows[1].Vn;
+            p->ows[i].V3 = p->ows[2].Vn;
+            multiseo_Pcalc(&(p->ows[i]), 3, Cs, Cjs3);
+        }
+        else if (i == 1 || i == 2) // 足2
+        {
+            p->ows[i].V1 = p->ows[0].Vn;
+            p->ows[i].V2 = p->ows[3].Vn;
+            multiseo_Pcalc(&(p->ows[i]), 2, Cs, Cjs2);
+        }
+        else if (i == 3) // 足3
+        {
+            p->ows[i].V1 = Vn1;
+            p->ows[i].V2 = p->ows[1].Vn;
+            p->ows[i].V3 = p->ows[2].Vn;
+            multiseo_Pcalc(&(p->ows[i]), 3, Cs, Cjs3);
+        }
+    }
+}
+
+// 一方通行のエネルギー計算(&multi_oneway_4seo,Cs,Cjs足2,Cj足3)
+void multi_oneway_4seo_calcEner(multi_oneway_4seo *p, double Cs, double Cjs2, double Cjs3)
+{
+    int i = 0;
+    for (i = 0; i < 4; i++)
+    {
+        if (i == 0 || i == 3)
+        { // 足3本
+            multiseo_Ecalc(&(p->ows[i]), 3, Cs, Cjs3);
+        }
+        else if (i == 1 || i == 2)
+        { // 足2本
+            multiseo_Ecalc(&(p->ows[i]), 2, Cs, Cjs2);
+        }
+    }
+}
+
+// 一方通行の電荷チャージ(&multi_oneway_4seo,OWSEO_PARTICLES,OWSEO_ROWS,OWSEO_COLUMNS,R,dt)(三次元配列)
+void multi_oneway_4seo_3dimCharge(multi_oneway_4seo *p, int particles, int rows, int columns, double R, double dt)
+{
+    int i = 0;
+    for (i = 0; i < particles * rows * columns; i++)
+    {
+        multiseo_Charge(&(p->ows[0]), &(p->ows[3]), R, dt); // 返り値なし
+        p++;
+    }
+}
+
+// 一方通行の待ち時間計算(&multi_onewayseo,OWSEO_PARTICLES,OWSEO_ROWS,OWSEO_COLUMNS,Rj)(三次元配列)
+multi_oneway_4seo *multi_oneway_4seo_3dimWt(multi_oneway_4seo *p, int particles, int rows, int columns, double Rj)
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    double tmp = 100;
+    multi_oneway_4seo *a = p;
+    for (i; i < particles * rows * columns; i++)
+    {
+        for (k = 0; k < 4; k++)
+        {
+            for (j = 0; j < 3; j++)
+            {
+                if (j == 0)
+                {
+                    p->ows[k].wt[j] = 0.1;
+                }
+                else
+                {
+                    if (p->ows[k].dE[j - 1] > 0)
+                    {
+                        for(int rep=0; rep < p->ows[k].multi_num - abs(p->ows[k].tunnel_num);rep++)
+                        {
+                            double mj_tunnele_wt = (e * e * Rj / p->ows[k].dE[j - 1]) * log(1 / Random());
+                            p->ows[k].wt[j] = min(mj_tunnele_wt, p->ows[k].wt[j]);
+                        }
+                    }
+                    else
+                    {
+                        p->ows[k].wt[j] = 100;
+                    }
+                }
+                if (tmp >= p->ows[k].wt[j])
+                {
+                    tmp = p->ows[k].wt[j];
+                    p->ows[k].tunnel = j;
+                    p->locate = k;
+                    a = p;
+                }
+            }
+        }
+        p++;
+    }
+    return a;
+}
+
 /*--------------------------------------------------汎用-----------------------------------------------------------------------*/
 
 // 0から1の間の乱数生成
