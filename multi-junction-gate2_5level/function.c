@@ -305,82 +305,49 @@ void seo_tunnel(seo *p)
     }
 }
 /*--------------------------------------------------多重振動子----------------------------------------------------------------------*/
-// 振動子のパラメータ計算(&seo,足の本数,Cs,Cjs)
-void seo_Pcalc(seo *p, int leg, double Cs, double Cjs)
+// 多重振動子のパラメータ計算(&multiseo,足の本数,Cs,Cjs)
+void multiseo_Pcalc(multiseo *p, int leg, double Cs, double Cjs)
 {
-    if (leg == 0)
-    {
-        p->Vn = p->Q / Cjs;
-    }
-    else if (leg == 1)
-    {
-        double q1 = 0;
-        q1 = Cs * (Cjs * p->V1 - p->Q) / (Cs + Cjs);
-        p->Vn = (p->Q + q1) / Cjs;
-    }
-    else if (leg == 2)
-    {
-        double q1 = 0;
-        double q2 = 0;
-        q1 = Cs * ((Cs + Cjs) * p->V1 - Cs * p->V2 - p->Q) / (2 * Cs + Cjs);
-        q2 = Cs * ((Cs + Cjs) * p->V2 - Cs * p->V1 - p->Q) / (2 * Cs + Cjs);
-        p->Vn = (p->Q + q1 + q2) / Cjs;
-    }
-    else if (leg == 3)
-    {
-        double q1 = 0;
-        double q2 = 0;
-        double q3 = 0;
-        q1 = (Cs * (-p->Q + Cjs * p->V1 + Cs * (2 * p->V1 - p->V2 - p->V3))) / (3 * Cs + Cjs);
-        q2 = -((Cs * (p->Q - Cjs * p->V2 + Cs * (p->V1 - 2 * p->V2 + p->V3))) / (3 * Cs + Cjs));
-        q3 = -((Cs * (p->Q + Cs * (p->V1 + p->V2 - 2 * p->V3) - Cjs * p->V3)) / (3 * Cs + Cjs));
-        p->Vn = (p->Q + q1 + q2 + q3) / Cjs;
-    }
-    else if (leg == 4)
-    {
-        double q1 = 0;
-        double q2 = 0;
-        double q3 = 0;
-        double q4 = 0;
-        q1 = Cs * ((3 * Cs + Cjs) * p->V1 - Cs * (p->V2 + p->V3 + p->V4) - p->Q) / (4 * Cs + Cjs);
-        q2 = Cs * ((3 * Cs + Cjs) * p->V2 - Cs * (p->V1 + p->V3 + p->V4) - p->Q) / (4 * Cs + Cjs);
-        q3 = Cs * ((3 * Cs + Cjs) * p->V3 - Cs * (p->V1 + p->V2 + p->V4) - p->Q) / (4 * Cs + Cjs);
-        q4 = Cs * ((3 * Cs + Cjs) * p->V4 - Cs * (p->V1 + p->V2 + p->V3) - p->Q) / (4 * Cs + Cjs);
-        p->Vn = (p->Q + q1 + q2 + q3 + q4) / Cjs;
-    }
-    else if (leg == 5)
-    {
-        double q1 = 0;
-        double q2 = 0;
-        double q3 = 0;
-        double q4 = 0;
-        double q5 = 0;
-        q1 = (Cs * (-p->Q + Cjs * p->V1 + Cs * (4 * p->V1 - p->V2 - p->V3 - p->V4 - p->V5))) / (5 * Cs + Cjs);
-        q2 = (Cs * (-p->Q + Cjs * p->V2 - Cs * (p->V1 - 4 * p->V2 + p->V3 + p->V4 + p->V5))) / (5 * Cs + Cjs);
-        q3 = (Cs * (-p->Q + Cjs * p->V3 - Cs * (p->V1 + p->V2 - 4 * p->V3 + p->V4 + p->V5))) / (5 * Cs + Cjs);
-        q4 = (Cs * (-p->Q + Cjs * p->V4 - Cs * (p->V1 + p->V2 + p->V3 - 4 * p->V4 + p->V5))) / (5 * Cs + Cjs);
-        q5 = (Cs * (-p->Q + Cjs * p->V5 - Cs * (p->V1 + p->V2 + p->V3 + p->V4 - 4 * p->V5))) / (5 * Cs + Cjs);
-        p->Vn = (p->Q + q1 + q2 + q3 + q4 + q5) / Cjs;
-    }
-        else if (leg == 6)
-    {
-        double q1 = 0;
-        double q2 = 0;
-        double q3 = 0;
-        double q4 = 0;
-        double q5 = 0;
-        double q6 = 0;
-        q1 = (Cs * (-p->Q + Cjs * p->V1 + Cs * (4 * p->V1 - p->V2 - p->V3 - p->V4 - p->V5 + p->V6))) / (6 * Cs + Cjs);
-        q2 = (Cs * (-p->Q + Cjs * p->V2 - Cs * (p->V1 - 4 * p->V2 + p->V3 + p->V4 + p->V5 + p->V6))) / (6 * Cs + Cjs);
-        q3 = (Cs * (-p->Q + Cjs * p->V3 - Cs * (p->V1 + p->V2 - 4 * p->V3 + p->V4 + p->V5 + p->V6))) / (6 * Cs + Cjs);
-        q4 = (Cs * (-p->Q + Cjs * p->V4 - Cs * (p->V1 + p->V2 + p->V3 - 4 * p->V4 + p->V5 + p->V6))) / (6 * Cs + Cjs);
-        q5 = (Cs * (-p->Q + Cjs * p->V5 - Cs * (p->V1 + p->V2 + p->V3 + p->V4 - 4 * p->V5 + p->V6))) / (6 * Cs + Cjs);
-        q6 = (Cs * (-p->Q + Cjs * p->V6 - Cs * (p->V1 + p->V2 + p->V3 + p->V4 + p->V5 - 4 * p->V6))) / (6 * Cs + Cjs);
-        p->Vn = (p->Q + q1 + q2 + q3 + q4 + q5 + q6) / Cjs;
-    }
+    double V_sum = p->V1 + p->V2 + p->V3 + p->V4 + p->V5 + p->V6;
+    p->Vn = p->multi_num * (Cjs * p->Q + Cs * Cjs * V_sum - Cjs * p->tunnel_num * e) / Cjs * (leg * Cjs * (p->multi_num * Cs + Cjs));
 }
 
+// 多重振動子のエネルギー計算(&multiseo,足の本数,Cs,Cjs)
+void multiseo_Ecalc(multiseo *p, int leg, double Cs, double Cjs)
+{
+    double V_sum = p->V1 + p->V2 + p->V3 + p->V4 + p->V5 + p->V6;
+    // up
+    p->dE[0] = e * ((-(p->multi_num - 1) * leg + 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q - e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs));
+    // down
+    p->dE[1] = - e * (-(-(p->multi_num - 1) * leg - 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q + e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs)); 
+}
 
+// 多重振動子の電荷チャージ(&multiseo,R,dt)
+double multiseo_charge(multiseo *p, multiseo *pmax, double R, double dt);
+
+// 多重振動子の電荷チャージ(&multiseo,SEO_ROWS,SEO_COLUMNS,R,dt)(二次元配列) *返り値無し
+void multiseo_2dimCharge(multiseo *p, int rows, int columns, double R, double dt);
+
+// 多重振動子の電荷チャージ(&multiseo,SEO_PARTICLES,SEO_ROWS,SEO_COLUMNS,R,dt)(三次元配列) *返り値なし
+void multiseo_3dimcharge(multiseo *p, int particles, int rows, int columns, double R, double dt);
+
+// 多重振動子の電荷チャージ(&multiseo,SEO_PARTICLES,SEO_ROWS,SEO_COLUMNS,R,dt)(三次元配列)
+double multiseo_3dimCharge(multiseo *p, int particles, int rows, int columuns, double R, double dt);
+
+// 多重振動子の電荷チャージ(&multiseo,R,dt) *返り値なし
+void multiSeo_charge(multiseo *p, multiseo *pmax, double R, double dt);
+
+// 多重振動子のwt計算(&multiseo,&seomax,Rj)
+multiseo *multiseo_wt(multiseo *p, multiseo *pmax, double Rj);
+
+// 多重振動子のwt計算(二次元配列)(&multiseo,SEO_ROWS,SEO_COLUMNS,Rj)
+multiseo *multiseo_2dimwt(multiseo *p, int rows, int columns, double Rj);
+
+// 多重振動子のwt計算(&multiseo,SEO_PARTICLES,SEO_ROWS,SEO_COLUMNS,Rj)(三次元配列)
+multiseo *multiseo_3dimwt(multiseo *p, int particles, int rows, int columns, double Rj);
+
+// 多重振動子のトンネル(&multiseo)
+void multiseo_tunnel(multiseo *p);
 /*--------------------------------------------------メモリ----------------------------------------------------------------------*/
 
 // メモリのパラメータ計算(&memori,足の本数,Cm,Cjm)

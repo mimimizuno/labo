@@ -71,13 +71,14 @@ typedef struct
     double wt[3];
     int multi_num;
     int tunnel;
+    int tunnel_num;
 } multiseo;
 
 // 多重振動子のパラメータ計算(&multiseo,足の本数,Cs,Cjs)
 void multiseo_Pcalc(multiseo *p, int leg, double Cs, double Cjs);
 
 // 多重振動子のエネルギー計算(&multiseo,足の本数,Cs,Cjs)
-void multiseo_Ecalcmu(multiseo *p, int leg, double Cs, double Cjs);
+void multiseo_Ecalc(multiseo *p, int leg, double Cs, double Cjs);
 
 // 多重振動子の電荷チャージ(&multiseo,R,dt)
 double multiseo_charge(multiseo *p, multiseo *pmax, double R, double dt);
