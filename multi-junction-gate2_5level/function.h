@@ -83,6 +83,9 @@ void multiseo_Ecalc(multiseo *p, int leg, double Cs, double Cjs);
 // 多重振動子の電荷チャージ(&multiseo,R,dt)
 double multiseo_charge(multiseo *p, multiseo *pmax, double R, double dt);
 
+// 多重振動子の電荷チャージ(&multiseo,R,dt) *返り値なし
+void multiseo_Charge(multiseo *p, multiseo *pmax, double R, double dt);
+
 // 多重振動子の電荷チャージ(&multiseo,SEO_ROWS,SEO_COLUMNS,R,dt)(二次元配列) *返り値無し
 void multiseo_2dimCharge(multiseo *p, int rows, int columns, double R, double dt);
 
@@ -90,10 +93,7 @@ void multiseo_2dimCharge(multiseo *p, int rows, int columns, double R, double dt
 void multiseo_3dimcharge(multiseo *p, int particles, int rows, int columns, double R, double dt);
 
 // 多重振動子の電荷チャージ(&multiseo,SEO_PARTICLES,SEO_ROWS,SEO_COLUMNS,R,dt)(三次元配列)
-double multiseo_3dimCharge(multiseo *p, int particles, int rows, int columuns, double R, double dt);
-
-// 多重振動子の電荷チャージ(&multiseo,R,dt) *返り値なし
-void multiSeo_charge(multiseo *p, multiseo *pmax, double R, double dt);
+double multiseo_3dimCharge(multiseo *p, int particles, int rows, int columns, double R, double dt);
 
 // 多重振動子のwt計算(&multiseo,&seomax,Rj)
 multiseo *multiseo_wt(multiseo *p, multiseo *pmax, double Rj);
