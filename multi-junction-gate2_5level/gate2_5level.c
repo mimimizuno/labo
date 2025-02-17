@@ -1,26 +1,33 @@
 #include <stdio.h>
 #include "function.h"
-#define SEO_PARTICLES 2  // 振動子 z
-#define SEO_COLUMNS 16   // 振動子 x
-#define SEO_ROWS 10      // 振動子 y
-#define OWSEO_COLUMNS 16 // 一方通行回路 x
-#define OWSEO_ROWS 10    // 一方通行回路 y
-#define R 1.5            // 抵抗値[GΩ]
-#define Rsmall 0.8       // 小さめの抵抗値[GΩ]
-#define Rj 0.001         // トンネル抵抗[GΩ]
-#define C 2              // 接合容量[aF]
-#define Vd_seo 0.004     // 振動子のバイアス電圧
-#define Vd_owseo 0.0039  // 一方通行回路のバイアス電圧
-#define Cjs1 18          // 足1振動子のトンネル容量[aF]
-#define Cjs2 16          // 足2振動子のトンネル容量[aF]
-#define Cjs3 14          // 足3振動子のトンネル容量[aF]
-#define Cjs4 12          // 足4振動子のトンネル容量[aF]
-#define Cjs5 10          // 足5振動子のトンネル容量[aF]
-#define Cjs6 8           // 足6振動子のトンネル容量[aF]
-#define left 0           // 左変数
-#define right 1          // 右変数
-#define seo_number 8     // 振動子の層の総数
-#define owseo_number 12  // 一方通行振動子の層の総数
+#define SEO_PARTICLES 2       // 振動子 z
+#define SEO_COLUMNS 16        // 振動子 x
+#define SEO_ROWS 10           // 振動子 y
+#define OWSEO_COLUMNS 16      // 一方通行回路 x
+#define OWSEO_ROWS 10         // 一方通行回路 y
+#define R 1.5                 // 抵抗値[GΩ]
+#define Rsmall 0.8            // 小さめの抵抗値[GΩ]
+#define Rj 0.001              // トンネル抵抗[GΩ]
+#define C 2                   // 接合容量[aF]
+#define Vd_seo 0.004          // 振動子のバイアス電圧
+#define Vd_owseo 0.0039       // 一方通行回路のバイアス電圧
+#define Cjs1 18               // 足1振動子のトンネル容量[aF]
+#define Cjs2 16               // 足2振動子のトンネル容量[aF]
+#define Cjs3 14               // 足3振動子のトンネル容量[aF]
+#define Cjs4 12               // 足4振動子のトンネル容量[aF]
+#define Cjs5 10               // 足5振動子のトンネル容量[aF]
+#define Cjs6 8                // 足6振動子のトンネル容量[aF]
+#define multi_Cjs1 18         // 20重における足1振動子のトンネル容量(18 * 20)[aF]
+#define multi_Cjs2 16         // 20重における足2振動子のトンネル容量(16 * 20)[aF]
+#define multi_Cjs3 14         // 20重における足3振動子のトンネル容量(14 * 20)[aF]
+#define multi_Cjs4 12         // 20重における足4振動子のトンネル容量(12 * 20)[aF]
+#define multi_Cjs5 10         // 20重における足5振動子のトンネル容量(10 * 20)[aF]
+#define multi_Cjs6 8          // 20重における足6振動子のトンネル容量(8 * 20)[aF]
+#define multi_junction_num 20 // 多重トンネル接合の数
+#define left 0                // 左変数
+#define right 1               // 右変数
+#define seo_number 8          // 振動子の層の総数
+#define owseo_number 12       // 一方通行振動子の層の総数
 
 int main()
 {
@@ -49,88 +56,88 @@ int main()
 
     /*初期化--------------------------------------------------------------------------------------------------------------------------------------------------------*/
     // 回路のポインタ
-    seo *seo_p[9];            // 振動子型ポインタ配列
-    oneway_4seo *owseo_p[13]; // 一方通行型ポインタ配列
+    multiseo *seo_p[9];             // 振動子型ポインタ配列
+    multi_oneway_4seo *owseo_p[13]; // 一方通行型ポインタ配列
 
     // 下方向回路
-    seo seo_command_d[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
-    seo_p[1] = seo_command_d[0][0];                                // 振動子型のポインタ
+    multiseo seo_command_d[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
+    seo_p[1] = seo_command_d[0][0];                                     // 振動子型のポインタ
 
     // 下方向回路の衝突判定回路
-    seo seo_detection_d[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
-    seo_p[2] = seo_detection_d[0];                    // 振動子型のポインタ
+    multiseo seo_detection_d[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
+    seo_p[2] = seo_detection_d[0];                         // 振動子型のポインタ
 
     // 左方向回路
-    seo seo_command_l[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
-    seo_p[3] = seo_command_l[0][0];                                // 振動子型のポインタ
+    multiseo seo_command_l[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
+    seo_p[3] = seo_command_l[0][0];                                     // 振動子型のポインタ
 
     // 左方向回路の衝突判定回路
-    seo seo_detection_l[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
-    seo_p[4] = seo_detection_l[0];                    // 振動子型のポインタ
+    multiseo seo_detection_l[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
+    seo_p[4] = seo_detection_l[0];                         // 振動子型のポインタ
 
     // 上方向回路
-    seo seo_command_u[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
-    seo_p[5] = seo_command_u[0][0];                                // 振動子l5型のポインタ
+    multiseo seo_command_u[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
+    seo_p[5] = seo_command_u[0][0];                                     // 振動子l5型のポインタ
 
     // 上方向回路の衝突判定回路
-    seo seo_detection_u[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
-    seo_p[6] = seo_detection_u[0];                    // 振動子型のポインタ
+    multiseo seo_detection_u[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
+    seo_p[6] = seo_detection_u[0];                         // 振動子型のポインタ
 
     // 右方向回路
-    seo seo_command_r[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
-    seo_p[7] = seo_command_r[0][0];                                // 振動子型のポインタ
+    multiseo seo_command_r[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [z][y][x]
+    seo_p[7] = seo_command_r[0][0];                                     // 振動子型のポインタ
 
     // 右方向回路の衝突判定回路
-    seo seo_detection_r[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
-    seo_p[8] = seo_detection_r[0];                    // 振動子型のポインタ
+    multiseo seo_detection_r[SEO_ROWS][SEO_COLUMNS] = {0}; // 振動子のパラメータ初期化 [y][x]
+    seo_p[8] = seo_detection_r[0];                         // 振動子型のポインタ
 
     // 下方向回路の一方通行回路
-    oneway_4seo owseo_command_d[SEO_PARTICLES][OWSEO_ROWS - 1][OWSEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[1] = owseo_command_d[0][0];                                              // 一方通行型のポインタ
+    multi_oneway_4seo owseo_command_d[SEO_PARTICLES][OWSEO_ROWS - 1][OWSEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[1] = owseo_command_d[0][0];                                                    // 一方通行型のポインタ
 
     // 下方向回路と衝突判定回路を繋ぐ一方通行回路
-    oneway_4seo owseo_CtoD_d[SEO_PARTICLES][SEO_ROWS - 1][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[2] = owseo_CtoD_d[0][0];                                          // 一方通行型のポインタ
+    multi_oneway_4seo owseo_CtoD_d[SEO_PARTICLES][SEO_ROWS - 1][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[2] = owseo_CtoD_d[0][0];                                                // 一方通行型のポインタ
 
     // 下方向の衝突判定回路と左方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_dtol[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[3] = owseo_DtoC_dtol[0][0];                                      // 一方通行型のポインタ
+    multi_oneway_4seo owseo_DtoC_dtol[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[3] = owseo_DtoC_dtol[0][0];                                            // 一方通行型のポインタ
 
     // 左方向回路の一方通行回路
-    oneway_4seo owseo_command_l[SEO_PARTICLES][OWSEO_ROWS][OWSEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[4] = owseo_command_l[0][0];                                              // 一方通行型のポインタ
+    multi_oneway_4seo owseo_command_l[SEO_PARTICLES][OWSEO_ROWS][OWSEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[4] = owseo_command_l[0][0];                                                    // 一方通行型のポインタ
 
     // 左方向回路と衝突判定回路を繋ぐ一方通行回路
-    oneway_4seo owseo_CtoD_l[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[5] = owseo_CtoD_l[0][0];                                          // 一方通行型のポインタ
+    multi_oneway_4seo owseo_CtoD_l[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[5] = owseo_CtoD_l[0][0];                                                // 一方通行型のポインタ
 
     // 左方向の衝突判定回路と上方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_ltou[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[6] = owseo_DtoC_ltou[0][0];                                      // 一方通行型のポインタ
+    multi_oneway_4seo owseo_DtoC_ltou[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[6] = owseo_DtoC_ltou[0][0];                                            // 一方通行型のポインタ
 
     // 上方向回路の一方通行回路
-    oneway_4seo owseo_command_u[SEO_PARTICLES][OWSEO_ROWS - 1][OWSEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[7] = owseo_command_u[0][0];                                              // 一方通行型のポインタ
+    multi_oneway_4seo owseo_command_u[SEO_PARTICLES][OWSEO_ROWS - 1][OWSEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[7] = owseo_command_u[0][0];                                                    // 一方通行型のポインタ
 
     // 上方向回路と衝突判定回路を繋ぐ一方通行回路
-    oneway_4seo owseo_CtoD_u[SEO_PARTICLES][SEO_ROWS - 1][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[8] = owseo_CtoD_u[0][0];                                          // 一方通行型のポインタ
+    multi_oneway_4seo owseo_CtoD_u[SEO_PARTICLES][SEO_ROWS - 1][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[8] = owseo_CtoD_u[0][0];                                                // 一方通行型のポインタ
 
     // 上方向の衝突判定回路と右方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_utor[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[9] = owseo_DtoC_utor[0][0];                                      // 一方通行型のポインタ
+    multi_oneway_4seo owseo_DtoC_utor[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[9] = owseo_DtoC_utor[0][0];                                            // 一方通行型のポインタ
 
     // 右方向回路の一方通行回路
-    oneway_4seo owseo_command_r[SEO_PARTICLES][OWSEO_ROWS][OWSEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[10] = owseo_command_r[0][0];                                             // 一方通行型のポインタ
+    multi_oneway_4seo owseo_command_r[SEO_PARTICLES][OWSEO_ROWS][OWSEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[10] = owseo_command_r[0][0];                                                   // 一方通行型のポインタ
 
     // 右方向回路と衝突判定回路を繋ぐ一方通行回路
-    oneway_4seo owseo_CtoD_r[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
-    owseo_p[11] = owseo_CtoD_r[0][0];                                         // 一方通行型のポインタ
+    multi_oneway_4seo owseo_CtoD_r[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS - 1] = {0}; // 一方通行のパラメータ初期化 [z][y][x]
+    owseo_p[11] = owseo_CtoD_r[0][0];                                               // 一方通行型のポインタ
 
     // 右方向の衝突判定回路と下方向回路を繋ぐ振動子
-    oneway_4seo owseo_DtoC_rtod[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
-    owseo_p[12] = owseo_DtoC_rtod[0][0];                                     // 一方通行型のポインタ
+    multi_oneway_4seo owseo_DtoC_rtod[SEO_PARTICLES][SEO_ROWS][SEO_COLUMNS] = {0}; // 一方通行のパラメータ初期化 [y][x]
+    owseo_p[12] = owseo_DtoC_rtod[0][0];                                           // 一方通行型のポインタ
 
     /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -520,7 +527,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_command_d[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3); // 右から左への伝搬
+                multi_oneway_4seo_setVd(&owseo_command_d[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3); // 右から左への伝搬
                 // if (i == 0 && j == 1 && k == 9)
                 // {
                 //     printf("set Vd %d %d %d ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", i, j, k, owseo_command_d[i][j][k].ows[0].Vd, owseo_command_d[i][j][k].ows[1].Vd, owseo_command_d[i][j][k].ows[2].Vd, owseo_command_d[i][j][k].ows[3].Vd);
@@ -542,7 +549,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS - 1; k++)
             {
-                oneway_4seo_setVd(&owseo_CtoD_d[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_d[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -554,7 +561,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_DtoC_dtol[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_dtol[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -573,7 +580,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS - 1; k++)
             {
-                oneway_4seo_setVd(&owseo_command_l[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3); // 右から左への伝搬
+                multi_oneway_4seo_setVd(&owseo_command_l[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3); // 右から左への伝搬
             }
         }
     }
@@ -585,7 +592,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_CtoD_l[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_l[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -597,7 +604,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_DtoC_ltou[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_ltou[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -609,7 +616,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_command_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_command_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -621,7 +628,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS - 1; k++)
             {
-                oneway_4seo_setVd(&owseo_CtoD_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -633,7 +640,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_DtoC_utor[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_utor[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -645,7 +652,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS - 1; k++)
             {
-                oneway_4seo_setVd(&owseo_command_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_command_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -657,7 +664,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_CtoD_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -669,7 +676,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                oneway_4seo_setVd(&owseo_DtoC_rtod[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_rtod[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
             }
         }
     }
@@ -681,14 +688,14 @@ int main()
     while (t < 200)
     {
         // ファイル書き込み[V]
-        fprintlayrow(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp1, t, pt);
-        fprintcollisionlay(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, fp2, t, pt);
-        fprintlaycolumn(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp3, t, pt);
-        fprintcollisionlay(seo_detection_l[0], SEO_ROWS, SEO_COLUMNS, fp4, t, pt);
-        fprintlayrow(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp5, t, pt);
-        fprintcollisionlay(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, fp6, t, pt);
-        fprintlaycolumn(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp7, t, pt);
-        fprintcollisionlay(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, fp8, t, pt);
+        fprint_multilayrow(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp1, t, pt);
+        fprint_multicollisionlay(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, fp2, t, pt);
+        fprint_multilaycolumn(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp3, t, pt);
+        fprint_multicollisionlay(seo_detection_l[0], SEO_ROWS, SEO_COLUMNS, fp4, t, pt);
+        fprint_multilayrow(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp5, t, pt);
+        fprint_multicollisionlay(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, fp6, t, pt);
+        fprint_multilaycolumn(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp7, t, pt);
+        fprint_multicollisionlay(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, fp8, t, pt);
         // fprintf(fp9, "%f %f %f %f %f %f\n", t, seo_command_d[0][6][8].Vn, seo_command_d[1][6][8].Vn, seo_detection_d[6][8].Vn, seo_command_l[0][6][8].Vn, seo_command_l[1][6][8].Vn);
         // fprintf(fp9, "%f %f %f %f %f\n", t, seo_detection_d[6][8].Vn, owseo_DtoC_dtol[0][6][8].ows[0].Vn, owseo_DtoC_dtol[0][6][8].ows[3].Vn, seo_command_l[0][6][8].Vn);
         // fprintf(fp9, "%f %f %f %f\n", t, owseo_DtoC_dtol[1][6][8].ows[3].Vn, seo_command_l[1][6][8].Vn, owseo_CtoD_l[1][5][7].ows[0].Vn);
@@ -711,8 +718,8 @@ int main()
         {
             seo_command_d[0][0][8].Vn = 0.006;  // 入力A
             seo_command_d[1][0][10].Vn = 0.006; // 入力B
-            seo_command_d[0][0][12].Vn = 0; // 入力Aバー
-            seo_command_d[1][0][14].Vn = 0; // 入力Bバー
+            seo_command_d[0][0][12].Vn = 0;     // 入力Aバー
+            seo_command_d[1][0][14].Vn = 0;     // 入力Bバー
         }
         else
         {
@@ -745,7 +752,7 @@ int main()
                             seo_command_d[i][j][k].V3 = owseo_CtoD_d[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_d[i][j][k].V4 = seo_command_r[CtoC][j][k].Vn; // 右方向命令回路から
                             seo_command_d[i][j][k].V5 = seo_command_l[CtoC][j][k].Vn; // 左方向命令回路へ
-                            seo_Pcalc(&seo_command_d[i][j][k], 5, C, Cjs5);
+                            multiseo_Pcalc(&seo_command_d[i][j][k], 5, C, multi_Cjs5);
                         }
                         else if (j == SEO_ROWS - 1)
                         {

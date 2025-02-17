@@ -263,6 +263,9 @@ void tunnelseoowseo(seo *sp, onewayseo *osp, double *t, double *dt);
 // 振動子,一方通行のトンネル(sp,mp,osp,&t,&dt)
 void Seo_onway4Seo_tunnel(seo *sp, oneway_4seo *osp, double *t, double *dt);
 
+// 多重振動子,多重一方通行のトンネル(multi_sp,multi_osp,&t,&dt)
+void multi_seo_onway4Seo_tunnel(multiseo *sp, multi_oneway_4seo *osp, double *t, double *dt);
+
 // 振動子,メモリ,一方通行のトンネル(sp,mp,osp,&t,&dt)(print表示有)
 void tunnelprint(seo *spfirst, seo *sp, memori *mpfirst, memori *mp, onewayseo *ospfirst, onewayseo *osp, double *t, double *dt);
 
@@ -281,7 +284,15 @@ void fprintlayrow(seo *spfirst, int seoparticles, int seorows, int seocolumns, F
 // ファイルにlayer(横)の2次元データを読み込む
 void fprintlaycolumn(seo *spfirst, int seoparticles, int seorows, int seocolumns, FILE *fp, double t, double pt);
 
+// ファイルに多重用のlayer(縦)の2次元データを読み込む
+void fprint_multilayrow(multiseo *spfirst, int seoparticles, int seorows, int seocolumns, FILE *fp, double t, double pt);
+
+// ファイルに多重用のlayer(横)の2次元データを読み込む
+void fprint_multilaycolumn(multiseo *spfirst, int seoparticles, int seorows, int seocolumns, FILE *fp, double t, double pt);
+
 // ファイルに衝突判定回路の2次元データを読み込む
 void fprintcollisionlay(seo *spfirst, int seorows, int seocolumns, FILE *fp, double t, double pt);
 
+// ファイルに多重用の衝突判定回路の2次元データを読み込む
+void fprint_multicollisionlay(multiseo *spfirst, int seorows, int seocolumns, FILE *fp, double t, double pt);
 #endif

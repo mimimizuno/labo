@@ -1396,6 +1396,32 @@ void Seo_onway4Seo_tunnel(seo *sp, oneway_4seo *osp, double *t, double *dt)
         *t += *dt;
     }
 }
+
+// 多重振動子,多重一方通行のトンネル(multi_sp,multi_osp,&t,&dt)
+void multi_seo_onway4Seo_tunnel(multiseo *sp, multi_oneway_4seo *osp, double *t, double *dt)
+{ // トンネル待ち時間比較
+    if (sp->tunnel == 0 && osp->ows[osp->locate].tunnel == 0)
+    { // トンネルしないとき
+        *t += *dt;
+    }
+    else if (sp->wt[sp->tunnel] < *dt && sp->wt[sp->tunnel] > 0.0 && sp->wt[sp->tunnel] < osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel])
+    { // 振動子トンネル
+        multiseo_tunnel(sp);
+        *t += sp->wt[sp->tunnel];
+        *dt = sp->wt[sp->tunnel];
+    }
+    else if (osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel] < *dt && osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel] > 0.0)
+    { // 一方通行トンネル
+        multi_seo_tunnel(&(osp->ows[osp->locate]));
+        *t += osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel];
+        *dt = osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel];
+    }
+    else
+    { // トンネルしないとき
+        *t += *dt;
+    }
+}
+
 // 振動子,メモリ,一方通行のトンネル(表示有)(sp,mp,osp,&t,&dt)
 void tunnelprint(seo *spfirst, seo *sp, memori *mpfirst, memori *mp, onewayseo *ospfirst, onewayseo *osp, double *t, double *dt)
 {
@@ -1709,8 +1735,215 @@ void fprintlaycolumn(seo *spfirst, int seoparticles, int seorows, int seocolumns
     }
 }
 
+// ファイルに多重用のlayer(縦)の2次元データを読み込む
+void fprint_multilayrow(multiseo *spfirst, int seoparticles, int seorows, int seocolumns, FILE *fp, double t, double pt)
+{
+    if (pt <= t)
+    { // 表示
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        int counts = 1;
+        for (x = 1; x < seocolumns + 1; x++)
+        {
+            for (z = 0; z < seoparticles; z++)
+            {
+                for (y = 1; y < seorows + 1; y++)
+                {
+                    if (y == 1)
+                    {
+                        fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                    }
+                    else if (y == seorows)
+                    {
+                        fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
+                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                    }
+                    else
+                    {
+                        fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
+                        fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                    }
+                }
+
+                fprintf(fp, "\n");
+                if (x == seocolumns && z == 1)
+                {
+                }
+                else
+                {
+                    for (y = 1; y < seorows + 1; y++)
+                    {
+                        if (y == 1)
+                        {
+                            fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        }
+                        else if (y == seorows)
+                        {
+                            fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
+                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                            fprintf(fp, "\n");
+                        }
+                        else
+                        {
+                            fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
+                            fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        }
+                    }
+                }
+                counts += 1;
+            }
+        }
+        fprintf(fp, "\n");
+    }
+}
+
+// ファイルに多重用のlayer(横)の2次元データを読み込む
+void fprint_multilaycolumn(multiseo *spfirst, int seoparticles, int seorows, int seocolumns, FILE *fp, double t, double pt)
+{
+    if (pt <= t)
+    { // 表示
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        int counts = 1;
+
+        for (x = 1; x < seocolumns + 1; x++)
+        {
+            for (y = 1; y < seorows + 1; y++)
+            {
+                for (z = 0; z < seoparticles; z++)
+                {
+                    if (y == 1 && z == 0)
+                    {
+                        fprintf(fp, "%d %d %f\n", x, counts, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                        // fprintf(fp, "  %d %d %d\n", x, y, z);
+                    }
+                    else if (y == seorows && z == 1)
+                    {
+                        fprintf(fp, "%d %d %f\n", x, counts, (spfirst + x + y * seocolumns + (z - 1) * (seocolumns * seorows))->Vn);
+                        // fprintf(fp, "  %d %d %d\n", x, y, z - 1);
+                    }
+                    else
+                    {
+                        if (z == 0)
+                        {
+                            fprintf(fp, "%d %d %f\n", x, counts, (spfirst + x + (y - 1) * seocolumns + (z + 1) * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y - 1, z + 1);
+                            fprintf(fp, "%d %d %f\n", x, counts, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y, z);
+                        }
+                        else if (z == 1)
+                        {
+                            fprintf(fp, "%d %d %f\n", x, counts, (spfirst + x + y * seocolumns + (z - 1) * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y, z - 1);
+                            fprintf(fp, "%d %d %f\n", x, counts, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y, z);
+                        }
+                    }
+                    counts += 1;
+                }
+            }
+            fprintf(fp, "\n");
+            counts = 1;
+            for (y = 1; y < seorows + 1; y++)
+            {
+                for (z = 0; z < seoparticles; z++)
+                {
+                    if (y == 1 && z == 0)
+                    {
+                        fprintf(fp, "%d %d %f\n", x + 1, counts, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                        // fprintf(fp, "  %d %d %d\n", x, y, z);
+                    }
+                    else if (y == seorows && z == 1)
+                    {
+                        fprintf(fp, "%d %d %f\n", x + 1, counts, (spfirst + x + y * seocolumns + (z - 1) * (seocolumns * seorows))->Vn);
+                        // fprintf(fp, "  %d %d %d\n", x, y, z - 1);
+                    }
+                    else
+                    {
+                        if (z == 0)
+                        {
+                            fprintf(fp, "%d %d %f\n", x + 1, counts, (spfirst + x + (y - 1) * seocolumns + (z + 1) * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y - 1, z + 1);
+                            fprintf(fp, "%d %d %f\n", x + 1, counts, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y, z);
+                        }
+                        else if (z == 1)
+                        {
+                            fprintf(fp, "%d %d %f\n", x + 1, counts, (spfirst + x + y * seocolumns + (z - 1) * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y, z - 1);
+                            fprintf(fp, "%d %d %f\n", x + 1, counts, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
+                            // fprintf(fp, "  %d %d %d\n", x, y, z);
+                        }
+                    }
+                    counts += 1;
+                }
+            }
+            counts = 1;
+            fprintf(fp, "\n");
+        }
+        fprintf(fp, "\n");
+    }
+}
+
 // ファイルに衝突判定回路の2次元データを読み込む
 void fprintcollisionlay(seo *spfirst, int seorows, int seocolumns, FILE *fp, double t, double pt)
+{
+    if (pt <= t)
+    { // 表示
+        int x = 0;
+        int y = 0;
+        for (x = 1; x < seocolumns + 1; x++)
+        {
+            for (y = 1; y < seorows + 1; y++)
+            {
+                if (y == 1)
+                {
+                    fprintf(fp, "%d %d %f\n", x, y, (spfirst + x + y * seocolumns)->Vn);
+                }
+                else if (y == seorows)
+                {
+                    fprintf(fp, "%d %d %f\n", x, y, (spfirst + x + (y - 1) * seocolumns)->Vn);
+                }
+                else
+                {
+                    fprintf(fp, "%d %d %f\n", x, y, (spfirst + x + (y - 1) * seocolumns)->Vn);
+                    fprintf(fp, "%d %d %f\n", x, y, (spfirst + x + y * seocolumns)->Vn);
+                }
+            }
+            fprintf(fp, "\n");
+            if (x < seocolumns + 1)
+            {
+                for (y = 1; y < seorows + 1; y++)
+                {
+                    if (y == 1)
+                    {
+                        fprintf(fp, "%d %d %f\n", x + 1, y, (spfirst + x + y * seocolumns)->Vn);
+                    }
+                    else if (y == seorows)
+                    {
+                        fprintf(fp, "%d %d %f\n", x + 1, y, (spfirst + x + (y - 1) * seocolumns)->Vn);
+                        fprintf(fp, "\n");
+                    }
+                    else
+                    {
+                        fprintf(fp, "%d %d %f\n", x + 1, y, (spfirst + x + (y - 1) * seocolumns)->Vn);
+                        fprintf(fp, "%d %d %f\n", x + 1, y, (spfirst + x + y * seocolumns)->Vn);
+                    }
+                }
+            }
+        }
+        fprintf(fp, "\n");
+    }
+}
+
+// ファイルに多重用の衝突判定回路の2次元データを読み込む
+void fprint_multicollisionlay(multiseo *spfirst, int seorows, int seocolumns, FILE *fp, double t, double pt)
 {
     if (pt <= t)
     { // 表示
