@@ -424,7 +424,7 @@ multiseo *multiseo_2dimwt(multiseo *p, int rows, int columns, double Rj)
     int i = 0;
     int j = 0;
     double tmp = 100;
-    seo *a = p;
+    multiseo *a = p;
     for (i; i < rows * columns; i++)
     {
         for (j = 0; j < 3; j++)
@@ -466,7 +466,7 @@ multiseo *multiseo_3dimwt(multiseo *p, int particles, int rows, int columns, dou
     int i = 0;
     int j = 0;
     double tmp = 100;
-    seo *a = p;
+    multiseo *a = p;
     for (i; i < particles * rows * columns; i++)
     {
         for (j = 0; j < 3; j++)
@@ -1079,11 +1079,12 @@ oneway_4seo *oneway_4seo_3dimWt(oneway_4seo *p, int particles, int rows, int col
 }
 
 /*--------------------------------------------------一方通行(多重振動子4個)-------------------------------------------------------------*/
-// 一方通行のVd割り当て(&multi_oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3)
-void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3)
+// 一方通行のVd割り当て(&multi_oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3,multi_junction_num)
+void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3,int junction_num)
 {
     for (int i = 0; i < 4; i++)
     {
+        p->ows[i].multi_num = junction_num;
         if (i == 1 || i == 2)
         {
             p->ows[i].Vd = Vd;
@@ -1412,7 +1413,7 @@ void multi_seo_onway4Seo_tunnel(multiseo *sp, multi_oneway_4seo *osp, double *t,
     }
     else if (osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel] < *dt && osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel] > 0.0)
     { // 一方通行トンネル
-        multi_seo_tunnel(&(osp->ows[osp->locate]));
+        multiseo_tunnel(&(osp->ows[osp->locate]));
         *t += osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel];
         *dt = osp->ows[osp->locate].wt[osp->ows[osp->locate].tunnel];
     }

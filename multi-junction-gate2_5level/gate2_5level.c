@@ -17,12 +17,12 @@
 #define Cjs4 12               // 足4振動子のトンネル容量[aF]
 #define Cjs5 10               // 足5振動子のトンネル容量[aF]
 #define Cjs6 8                // 足6振動子のトンネル容量[aF]
-#define multi_Cjs1 18         // 20重における足1振動子のトンネル容量(18 * 20)[aF]
-#define multi_Cjs2 16         // 20重における足2振動子のトンネル容量(16 * 20)[aF]
-#define multi_Cjs3 14         // 20重における足3振動子のトンネル容量(14 * 20)[aF]
-#define multi_Cjs4 12         // 20重における足4振動子のトンネル容量(12 * 20)[aF]
-#define multi_Cjs5 10         // 20重における足5振動子のトンネル容量(10 * 20)[aF]
-#define multi_Cjs6 8          // 20重における足6振動子のトンネル容量(8 * 20)[aF]
+#define multi_Cjs1 360         // 20重における足1振動子のトンネル容量(18 * 20)[aF]
+#define multi_Cjs2 320         // 20重における足2振動子のトンネル容量(16 * 20)[aF]
+#define multi_Cjs3 280         // 20重における足3振動子のトンネル容量(14 * 20)[aF]
+#define multi_Cjs4 240         // 20重における足4振動子のトンネル容量(12 * 20)[aF]
+#define multi_Cjs5 200         // 20重における足5振動子のトンネル容量(10 * 20)[aF]
+#define multi_Cjs6 160          // 20重における足6振動子のトンネル容量(8 * 20)[aF]
 #define multi_junction_num 20 // 多重トンネル接合の数
 #define left 0                // 左変数
 #define right 1               // 右変数
@@ -166,7 +166,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-
+                seo_command_d[i][j][k].multi_num = multi_junction_num;
                 if ((j == 1) && (k == 3 || k == 5 || k == 8 || k == 10))
                 {
                     seo_command_d[i][j][k].Vd = Vd_seo; //[V]
@@ -212,6 +212,7 @@ int main()
     {
         for (j = 1; j < SEO_COLUMNS; j++) // x
         {
+            seo_detection_d[i][j].multi_num = multi_junction_num;
             if ((i == 1) && (j == 3 || j == 5 || j == 8 || j == 10)) // 壁隣接マス
             {
                 seo_detection_d[i][j].Vd = Vd_seo; //[V]
@@ -242,6 +243,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
+                seo_command_l[i][j][k].multi_num = multi_junction_num;
                 if (j == 1 && (k == 3 || k == 5 || k == 8 || k == 10))
                 {
                     seo_command_l[i][j][k].Vd = Vd_seo; //[V]
@@ -287,6 +289,7 @@ int main()
     {
         for (j = 1; j < SEO_COLUMNS; j++)
         {
+            seo_detection_l[i][j].multi_num = multi_junction_num;
             if (j == 2 && (i == 6 || i == 7)) // 壁隣接マス
             {
                 seo_detection_l[i][j].Vd = Vd_seo; //[V]
@@ -333,6 +336,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
+                seo_command_u[i][j][k].multi_num = multi_junction_num;
                 if (j == 1 && (k == 3 || k == 5 || k == 8 || k == 10))
                 {
                     seo_command_u[i][j][k].Vd = Vd_seo; //[V]
@@ -378,6 +382,7 @@ int main()
     {
         for (j = 1; j < SEO_COLUMNS; j++) // x
         {
+            seo_detection_u[i][j].multi_num = multi_junction_num;
             if ((i == 2) && (j == 11 || j == 13)) // 壁隣接マス
             {
                 seo_detection_u[i][j].Vd = Vd_seo; //[V]
@@ -432,6 +437,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
+                seo_command_r[i][j][k].multi_num = multi_junction_num;
                 if (j == 1 && (k == 3 || k == 5 || k == 8 || k == 10))
                 {
                     seo_command_r[i][j][k].Vd = Vd_seo; //[V]
@@ -477,6 +483,7 @@ int main()
     {
         for (j = 1; j < SEO_COLUMNS; j++) // x
         {
+            seo_detection_r[i][j].multi_num = multi_junction_num;
             if (j == 3 && ((i >= 1 && i <= 5) || i == 8)) // 壁隣接マス
             {
                 seo_detection_r[i][j].Vd = Vd_seo; //[V]
@@ -527,7 +534,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_command_d[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3); // 右から左への伝搬
+                multi_oneway_4seo_setVd(&owseo_command_d[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3, multi_junction_num); // 右から左への伝搬
                 // if (i == 0 && j == 1 && k == 9)
                 // {
                 //     printf("set Vd %d %d %d ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", i, j, k, owseo_command_d[i][j][k].ows[0].Vd, owseo_command_d[i][j][k].ows[1].Vd, owseo_command_d[i][j][k].ows[2].Vd, owseo_command_d[i][j][k].ows[3].Vd);
@@ -549,7 +556,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS - 1; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_CtoD_d[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_d[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -561,7 +568,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_DtoC_dtol[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_dtol[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -580,7 +587,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS - 1; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_command_l[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3); // 右から左への伝搬
+                multi_oneway_4seo_setVd(&owseo_command_l[i][j][k], Vd_owseo, left, C, Cjs2, Cjs3, multi_junction_num); // 右から左への伝搬
             }
         }
     }
@@ -592,7 +599,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_CtoD_l[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_l[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -604,7 +611,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_DtoC_ltou[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_ltou[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -616,7 +623,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_command_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_command_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -628,7 +635,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS - 1; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_CtoD_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_u[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -640,7 +647,7 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_DtoC_utor[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_utor[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -652,7 +659,7 @@ int main()
         {
             for (k = 1; k < OWSEO_COLUMNS - 1; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_command_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_command_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -664,7 +671,7 @@ int main()
         {
             for (k = 0; k < SEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_CtoD_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_CtoD_r[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
@@ -676,10 +683,12 @@ int main()
         {
             for (k = 1; k < SEO_COLUMNS; k++)
             {
-                multi_oneway_4seo_setVd(&owseo_DtoC_rtod[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3);
+                multi_oneway_4seo_setVd(&owseo_DtoC_rtod[i][j][k], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
             }
         }
     }
+
+    /* バイアス電圧で利用するCjの値は隣り合う振動子に電子トンネルによる電圧変化が与える影響を計算するために使うから多重用の値ではない */
 
     // int time = 0;
     // printf("before while 0 1 9 ows[0] = %f ows[1] = %f ows[2] = %f ows[3] = %f\n", owseo_command_d[0][1][9].ows[0].Vd, owseo_command_d[0][1][9].ows[1].Vd, owseo_command_d[0][1][9].ows[2].Vd, owseo_command_d[0][1][9].ows[3].Vd);
@@ -762,7 +771,7 @@ int main()
                             seo_command_d[i][j][k].V4 = seo_command_d[i][0][k].Vn;    // トリガ
                             seo_command_d[i][j][k].V5 = seo_command_r[CtoC][j][k].Vn; // 右方向命令回路から
                             seo_command_d[i][j][k].V6 = seo_command_l[CtoC][j][k].Vn; // 左方向命令回路へ
-                            seo_Pcalc(&seo_command_d[i][j][k], 6, C, Cjs6);
+                            multiseo_Pcalc(&seo_command_d[i][j][k], 6, C, multi_Cjs6);
                         }
                         else
                         {
@@ -772,7 +781,7 @@ int main()
                             seo_command_d[i][j][k].V4 = owseo_CtoD_d[i][j - 1][k - 1].ows[0].Vn; // 左方向衝突判定回路へ
                             seo_command_d[i][j][k].V5 = seo_command_r[CtoC][j][k].Vn;            // 右方向命令回路から
                             seo_command_d[i][j][k].V6 = seo_command_l[CtoC][j][k].Vn;            // 左方向命令回路へ
-                            seo_Pcalc(&seo_command_d[i][j][k], 6, C, Cjs6);
+                            multiseo_Pcalc(&seo_command_d[i][j][k], 6, C, multi_Cjs6);
                         }
                     }
                 }
@@ -787,7 +796,7 @@ int main()
                     seo_detection_d[i][j].V2 = owseo_CtoD_d[1][i - 1][j - 1].ows[3].Vn;
                     seo_detection_d[i][j].V3 = owseo_DtoC_dtol[0][i][j].ows[0].Vn;
                     seo_detection_d[i][j].V4 = owseo_DtoC_dtol[1][i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_d[i][j], 4, C, Cjs4);
+                    multiseo_Pcalc(&seo_detection_d[i][j], 4, C, multi_Cjs4);
                 }
             }
 
@@ -810,7 +819,7 @@ int main()
                             seo_command_l[i][j][k].V3 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_l[i][j][k].V4 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路から
                             seo_command_l[i][j][k].V5 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路へ
-                            seo_Pcalc(&seo_command_l[i][j][k], 5, C, Cjs5);
+                            multiseo_Pcalc(&seo_command_l[i][j][k], 5, C, multi_Cjs5);
                         }
                         else if (k == SEO_COLUMNS - 1)
                         {
@@ -819,7 +828,7 @@ int main()
                             seo_command_l[i][j][k].V3 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_l[i][j][k].V4 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路から
                             seo_command_l[i][j][k].V5 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路へ
-                            seo_Pcalc(&seo_command_l[i][j][k], 5, C, Cjs5);
+                            multiseo_Pcalc(&seo_command_l[i][j][k], 5, C, multi_Cjs5);
                         }
                         else
                         {
@@ -829,7 +838,7 @@ int main()
                             seo_command_l[i][j][k].V4 = owseo_CtoD_l[i][j - 1][k - 1].ows[0].Vn; // 左方向衝突判定回路へ
                             seo_command_l[i][j][k].V5 = seo_command_d[CtoC][j][k].Vn;            // 下方向命令回路から
                             seo_command_l[i][j][k].V6 = seo_command_u[CtoC][j][k].Vn;            // 上方向命令回路へ
-                            seo_Pcalc(&seo_command_l[i][j][k], 6, C, Cjs6);
+                            multiseo_Pcalc(&seo_command_l[i][j][k], 6, C, multi_Cjs6);
                         }
                     }
                 }
@@ -844,7 +853,7 @@ int main()
                     seo_detection_l[i][j].V2 = owseo_CtoD_l[1][i - 1][j - 1].ows[3].Vn;
                     seo_detection_l[i][j].V3 = owseo_DtoC_ltou[0][i][j].ows[0].Vn;
                     seo_detection_l[i][j].V4 = owseo_DtoC_ltou[1][i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_l[i][j], 4, C, Cjs4);
+                    multiseo_Pcalc(&seo_detection_l[i][j], 4, C, multi_Cjs4);
                 }
             }
 
@@ -867,7 +876,7 @@ int main()
                             seo_command_u[i][j][k].V3 = owseo_CtoD_u[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_u[i][j][k].V4 = seo_command_l[CtoC][j][k].Vn; // 左向命令回路から
                             seo_command_u[i][j][k].V5 = seo_command_r[CtoC][j][k].Vn; // 右向命令回路へ
-                            seo_Pcalc(&seo_command_u[i][j][k], 5, C, Cjs5);
+                            multiseo_Pcalc(&seo_command_u[i][j][k], 5, C, multi_Cjs5);
                         }
                         else if (j == SEO_ROWS - 1)
                         {
@@ -876,7 +885,7 @@ int main()
                             seo_command_u[i][j][k].V3 = owseo_CtoD_u[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_u[i][j][k].V4 = seo_command_l[CtoC][j][k].Vn; // 左方向命令回路から
                             seo_command_u[i][j][k].V5 = seo_command_r[CtoC][j][k].Vn; // 右方向命令回路へ
-                            seo_Pcalc(&seo_command_u[i][j][k], 5, C, Cjs5);
+                            multiseo_Pcalc(&seo_command_u[i][j][k], 5, C, multi_Cjs5);
                         }
                         else
                         {
@@ -886,7 +895,7 @@ int main()
                             seo_command_u[i][j][k].V4 = owseo_CtoD_u[i][j - 1][k - 1].ows[0].Vn; // 上方向衝突判定回路へ
                             seo_command_u[i][j][k].V5 = seo_command_l[CtoC][j][k].Vn;            // 左方向命令回路から
                             seo_command_u[i][j][k].V6 = seo_command_r[CtoC][j][k].Vn;            // 右方向命令回路へ
-                            seo_Pcalc(&seo_command_u[i][j][k], 6, C, Cjs6);
+                            multiseo_Pcalc(&seo_command_u[i][j][k], 6, C, multi_Cjs6);
                         }
                     }
                 }
@@ -901,7 +910,7 @@ int main()
                     seo_detection_u[i][j].V2 = owseo_CtoD_u[1][i - 1][j - 1].ows[3].Vn;
                     seo_detection_u[i][j].V3 = owseo_DtoC_utor[0][i][j].ows[0].Vn;
                     seo_detection_u[i][j].V4 = owseo_DtoC_utor[1][i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_u[i][j], 4, C, Cjs4);
+                    multiseo_Pcalc(&seo_detection_u[i][j], 4, C, multi_Cjs4);
                 }
             }
 
@@ -924,7 +933,7 @@ int main()
                             seo_command_r[i][j][k].V3 = owseo_CtoD_r[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_r[i][j][k].V4 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路から
                             seo_command_r[i][j][k].V5 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路へ
-                            seo_Pcalc(&seo_command_r[i][j][k], 5, C, Cjs5);
+                            multiseo_Pcalc(&seo_command_r[i][j][k], 5, C, multi_Cjs5);
                         }
                         else if (k == SEO_COLUMNS - 1)
                         {
@@ -933,7 +942,7 @@ int main()
                             seo_command_r[i][j][k].V3 = owseo_CtoD_r[i][j - 1][k - 1].ows[0].Vn;
                             seo_command_r[i][j][k].V4 = seo_command_u[CtoC][j][k].Vn; // 上方向命令回路から
                             seo_command_r[i][j][k].V5 = seo_command_d[CtoC][j][k].Vn; // 下方向命令回路へ
-                            seo_Pcalc(&seo_command_r[i][j][k], 5, C, Cjs5);
+                            multiseo_Pcalc(&seo_command_r[i][j][k], 5, C, multi_Cjs5);
                         }
                         else
                         {
@@ -943,7 +952,7 @@ int main()
                             seo_command_r[i][j][k].V4 = owseo_CtoD_r[i][j - 1][k - 1].ows[0].Vn; // 右方向衝突判定回路へ
                             seo_command_r[i][j][k].V5 = seo_command_u[CtoC][j][k].Vn;            // 上方向命令回路から
                             seo_command_r[i][j][k].V6 = seo_command_d[CtoC][j][k].Vn;            // 下方向命令回路へ
-                            seo_Pcalc(&seo_command_r[i][j][k], 6, C, Cjs6);
+                            multiseo_Pcalc(&seo_command_r[i][j][k], 6, C, multi_Cjs6);
                         }
                     }
                 }
@@ -958,7 +967,7 @@ int main()
                     seo_detection_r[i][j].V2 = owseo_CtoD_r[1][i - 1][j - 1].ows[3].Vn;
                     seo_detection_r[i][j].V3 = owseo_DtoC_rtod[0][i][j].ows[0].Vn;
                     seo_detection_r[i][j].V4 = owseo_DtoC_rtod[1][i][j].ows[0].Vn;
-                    seo_Pcalc(&seo_detection_r[i][j], 4, C, Cjs4);
+                    multiseo_Pcalc(&seo_detection_r[i][j], 4, C, multi_Cjs4);
                 }
             }
 
@@ -969,7 +978,7 @@ int main()
                 {
                     for (k = 0; k < OWSEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_command_d[i][j][k], C, Cjs2, Cjs3, seo_command_d[i][j][k].Vn, seo_command_d[i][j + 1][k].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_command_d[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_d[i][j][k].Vn, seo_command_d[i][j + 1][k].Vn);
                     }
                 }
             }
@@ -981,7 +990,7 @@ int main()
                 {
                     for (k = 0; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_CtoD_d[i][j][k], C, Cjs2, Cjs3, seo_command_d[i][j + 1][k + 1].Vn, seo_detection_d[j + 1][k + 1].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_CtoD_d[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_d[i][j + 1][k + 1].Vn, seo_detection_d[j + 1][k + 1].Vn);
                     }
                 }
             }
@@ -993,7 +1002,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_dtol[i][j][k], C, Cjs2, Cjs3, seo_detection_d[j][k].Vn, seo_command_l[i][j][k].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_DtoC_dtol[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_detection_d[j][k].Vn, seo_command_l[i][j][k].Vn);
                     }
                 }
             }
@@ -1005,7 +1014,7 @@ int main()
                 {
                     for (k = 0; k < OWSEO_COLUMNS - 1; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_command_l[i][j][k], C, Cjs2, Cjs3, seo_command_l[i][j][k].Vn, seo_command_l[i][j][k + 1].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_command_l[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_l[i][j][k].Vn, seo_command_l[i][j][k + 1].Vn);
                     }
                 }
             }
@@ -1017,7 +1026,7 @@ int main()
                 {
                     for (k = 0; k < SEO_COLUMNS - 1; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_CtoD_l[i][j][k], C, Cjs2, Cjs3, seo_command_l[i][j + 1][k + 1].Vn, seo_detection_l[j + 1][k + 1].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_CtoD_l[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_l[i][j + 1][k + 1].Vn, seo_detection_l[j + 1][k + 1].Vn);
                     }
                 }
             }
@@ -1029,7 +1038,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_ltou[i][j][k], C, Cjs2, Cjs3, seo_detection_l[j][k].Vn, seo_command_u[i][j][k].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_DtoC_ltou[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_detection_l[j][k].Vn, seo_command_u[i][j][k].Vn);
                     }
                 }
             }
@@ -1041,7 +1050,7 @@ int main()
                 {
                     for (k = 0; k < OWSEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_command_u[i][j][k], C, Cjs2, Cjs3, seo_command_u[i][j][k].Vn, seo_command_u[i][j + 1][k].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_command_u[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_u[i][j][k].Vn, seo_command_u[i][j + 1][k].Vn);
                     }
                 }
             }
@@ -1053,7 +1062,7 @@ int main()
                 {
                     for (k = 0; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_CtoD_u[i][j][k], C, Cjs2, Cjs3, seo_command_u[i][j + 1][k + 1].Vn, seo_detection_u[j + 1][k + 1].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_CtoD_u[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_u[i][j + 1][k + 1].Vn, seo_detection_u[j + 1][k + 1].Vn);
                     }
                 }
             }
@@ -1065,7 +1074,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_utor[i][j][k], C, Cjs2, Cjs3, seo_detection_u[j][k].Vn, seo_command_r[i][j][k].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_DtoC_utor[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_detection_u[j][k].Vn, seo_command_r[i][j][k].Vn);
                     }
                 }
             }
@@ -1077,7 +1086,7 @@ int main()
                 {
                     for (k = 0; k < OWSEO_COLUMNS - 1; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_command_r[i][j][k], C, Cjs2, Cjs3, seo_command_r[i][j][k].Vn, seo_command_r[i][j][k + 1].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_command_r[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_r[i][j][k].Vn, seo_command_r[i][j][k + 1].Vn);
                     }
                 }
             }
@@ -1089,7 +1098,7 @@ int main()
                 {
                     for (k = 0; k < SEO_COLUMNS - 1; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_CtoD_r[i][j][k], C, Cjs2, Cjs3, seo_command_r[i][j + 1][k + 1].Vn, seo_detection_r[j + 1][k + 1].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_CtoD_r[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_command_r[i][j + 1][k + 1].Vn, seo_detection_r[j + 1][k + 1].Vn);
                     }
                 }
             }
@@ -1101,7 +1110,7 @@ int main()
                 {
                     for (k = 1; k < SEO_COLUMNS; k++)
                     {
-                        oneway_4seo_calcPara(&owseo_DtoC_rtod[i][j][k], C, Cjs2, Cjs3, seo_detection_r[j][k].Vn, seo_command_d[i][j][k].Vn);
+                        multi_oneway_4seo_calcPara(&owseo_DtoC_rtod[i][j][k], C, multi_Cjs2, multi_Cjs3, seo_detection_r[j][k].Vn, seo_command_d[i][j][k].Vn);
                     }
                 }
             }
@@ -1119,11 +1128,11 @@ int main()
                 {
                     if (j == 1)
                     {
-                        seo_Ecalc(&seo_command_d[i][j][k], 5, C, Cjs5); // 足5
+                        multiseo_Ecalc(&seo_command_d[i][j][k], 5, C, multi_Cjs5); // 足5
                     }
                     else // トリガの振動子も含む
                     {
-                        seo_Ecalc(&seo_command_d[i][j][k], 6, C, Cjs6); // 足6
+                        multiseo_Ecalc(&seo_command_d[i][j][k], 6, C, multi_Cjs6); // 足6
                     }
                 }
             }
@@ -1134,7 +1143,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_d[i][j], 4, C, Cjs4); // 足4
+                multiseo_Ecalc(&seo_detection_d[i][j], 4, C, multi_Cjs4); // 足4
             }
         }
 
@@ -1147,11 +1156,11 @@ int main()
                 {
                     if (k == 1 || k == SEO_COLUMNS - 1)
                     {
-                        seo_Ecalc(&seo_command_l[i][j][k], 5, C, Cjs5); // 足5
+                        multiseo_Ecalc(&seo_command_l[i][j][k], 5, C, multi_Cjs5); // 足5
                     }
                     else
                     {
-                        seo_Ecalc(&seo_command_l[i][j][k], 6, C, Cjs6); // 足6
+                        multiseo_Ecalc(&seo_command_l[i][j][k], 6, C, multi_Cjs6); // 足6
                     }
                 }
             }
@@ -1162,7 +1171,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_l[i][j], 4, C, Cjs4); // 足4
+                multiseo_Ecalc(&seo_detection_l[i][j], 4, C, multi_Cjs4); // 足4
             }
         }
 
@@ -1175,11 +1184,11 @@ int main()
                 {
                     if (j == 1 || j == SEO_ROWS - 1)
                     {
-                        seo_Ecalc(&seo_command_u[i][j][k], 5, C, Cjs5); // 足5
+                        multiseo_Ecalc(&seo_command_u[i][j][k], 5, C, multi_Cjs5); // 足5
                     }
                     else
                     {
-                        seo_Ecalc(&seo_command_u[i][j][k], 6, C, Cjs6); // 足6
+                        multiseo_Ecalc(&seo_command_u[i][j][k], 6, C, multi_Cjs6); // 足6
                     }
                 }
             }
@@ -1190,7 +1199,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_u[i][j], 4, C, Cjs4); // 足4
+                multiseo_Ecalc(&seo_detection_u[i][j], 4, C, multi_Cjs4); // 足4
             }
         }
 
@@ -1203,11 +1212,11 @@ int main()
                 {
                     if (k == 1 || k == SEO_COLUMNS - 1)
                     {
-                        seo_Ecalc(&seo_command_r[i][j][k], 5, C, Cjs5); // 足5
+                        multiseo_Ecalc(&seo_command_r[i][j][k], 5, C, multi_Cjs5); // 足5
                     }
                     else
                     {
-                        seo_Ecalc(&seo_command_r[i][j][k], 6, C, Cjs6); // 足6
+                        multiseo_Ecalc(&seo_command_r[i][j][k], 6, C, multi_Cjs6); // 足6
                     }
                 }
             }
@@ -1218,7 +1227,7 @@ int main()
         {
             for (j = 1; j < SEO_COLUMNS; j++)
             {
-                seo_Ecalc(&seo_detection_r[i][j], 4, C, Cjs4); // 足4
+                multiseo_Ecalc(&seo_detection_r[i][j], 4, C, multi_Cjs4); // 足4
             }
         }
 
@@ -1229,7 +1238,7 @@ int main()
             {
                 for (k = 0; k < OWSEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_command_d[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_command_d[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1241,7 +1250,7 @@ int main()
             {
                 for (k = 0; k < SEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_CtoD_d[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_CtoD_d[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1253,7 +1262,7 @@ int main()
             {
                 for (k = 1; k < SEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_DtoC_dtol[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_DtoC_dtol[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1265,7 +1274,7 @@ int main()
             {
                 for (k = 0; k < OWSEO_COLUMNS - 1; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_command_l[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_command_l[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1277,7 +1286,7 @@ int main()
             {
                 for (k = 0; k < SEO_COLUMNS - 1; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_CtoD_l[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_CtoD_l[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1289,7 +1298,7 @@ int main()
             {
                 for (k = 1; k < SEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_DtoC_ltou[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_DtoC_ltou[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1301,7 +1310,7 @@ int main()
             {
                 for (k = 0; k < OWSEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_command_u[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_command_u[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1313,7 +1322,7 @@ int main()
             {
                 for (k = 0; k < SEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_CtoD_u[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_CtoD_u[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1325,7 +1334,7 @@ int main()
             {
                 for (k = 1; k < SEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_DtoC_utor[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_DtoC_utor[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1337,7 +1346,7 @@ int main()
             {
                 for (k = 0; k < OWSEO_COLUMNS - 1; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_command_r[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_command_r[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1349,7 +1358,7 @@ int main()
             {
                 for (k = 0; k < SEO_COLUMNS - 1; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_CtoD_r[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_CtoD_r[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1361,7 +1370,7 @@ int main()
             {
                 for (k = 1; k < SEO_COLUMNS; k++)
                 {
-                    oneway_4seo_calcEner(&owseo_DtoC_rtod[i][j][k], C, Cjs2, Cjs3);
+                    multi_oneway_4seo_calcEner(&owseo_DtoC_rtod[i][j][k], C, multi_Cjs2, multi_Cjs3);
                 }
             }
         }
@@ -1370,64 +1379,64 @@ int main()
 
         /*トンネル計算-----------------------------------------------------------------------------------------------------------------------------------------------------*/
         // 下命令振動子トンネル計算
-        seo_p[1] = seo_3dimwt(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[1] = multiseo_3dimwt(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 下衝突判定振動子トンネル計算
-        seo_p[2] = seo_2dimwt(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[2] = multiseo_2dimwt(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 左命令振動子トンネル計算
-        seo_p[3] = seo_3dimwt(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[3] = multiseo_3dimwt(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 左衝突判定振動子トンネル計算
-        seo_p[4] = seo_2dimwt(seo_detection_l[0], SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[4] = multiseo_2dimwt(seo_detection_l[0], SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 上命令振動子トンネル計算
-        seo_p[5] = seo_3dimwt(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[5] = multiseo_3dimwt(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 上衝突判定振動子トンネル計算
-        seo_p[6] = seo_2dimwt(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[6] = multiseo_2dimwt(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 右命令振動子トンネル計算
-        seo_p[7] = seo_3dimwt(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[7] = multiseo_3dimwt(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 左衝突判定振動子トンネル計算
-        seo_p[8] = seo_2dimwt(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, Rj);
+        seo_p[8] = multiseo_2dimwt(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 下命令一方通行トンネル計算
-        owseo_p[1] = oneway_4seo_3dimWt(owseo_command_d[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, Rj);
+        owseo_p[1] = multi_oneway_4seo_3dimWt(owseo_command_d[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, Rj);
 
         // 下命令から衝突判定の一方通行トンネル計算
-        owseo_p[2] = oneway_4seo_3dimWt(owseo_CtoD_d[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, Rj);
+        owseo_p[2] = multi_oneway_4seo_3dimWt(owseo_CtoD_d[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, Rj);
 
         // 下衝突判定から左命令の一方通行トンネル計算
-        owseo_p[3] = oneway_4seo_3dimWt(owseo_DtoC_dtol[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[3] = multi_oneway_4seo_3dimWt(owseo_DtoC_dtol[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 左命令一方通行トンネル計算
-        owseo_p[4] = oneway_4seo_3dimWt(owseo_command_l[0][0], SEO_PARTICLES, OWSEO_ROWS, OWSEO_COLUMNS - 1, Rj);
+        owseo_p[4] = multi_oneway_4seo_3dimWt(owseo_command_l[0][0], SEO_PARTICLES, OWSEO_ROWS, OWSEO_COLUMNS - 1, Rj);
 
         // 左命令から衝突判定の一方通行トンネル計算
-        owseo_p[5] = oneway_4seo_3dimWt(owseo_CtoD_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, Rj);
+        owseo_p[5] = multi_oneway_4seo_3dimWt(owseo_CtoD_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, Rj);
 
         // 左衝突判定から上命令の一方通行トンネル計算
-        owseo_p[6] = oneway_4seo_3dimWt(owseo_DtoC_ltou[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[6] = multi_oneway_4seo_3dimWt(owseo_DtoC_ltou[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 上命令一方通行トンネル計算
-        owseo_p[7] = oneway_4seo_3dimWt(owseo_command_u[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, Rj);
+        owseo_p[7] = multi_oneway_4seo_3dimWt(owseo_command_u[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, Rj);
 
         // 上命令から衝突判定の一方通行トンネル計算
-        owseo_p[8] = oneway_4seo_3dimWt(owseo_CtoD_u[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, Rj);
+        owseo_p[8] = multi_oneway_4seo_3dimWt(owseo_CtoD_u[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, Rj);
 
         // 上衝突判定から右命令の一方通行トンネル計算
-        owseo_p[9] = oneway_4seo_3dimWt(owseo_DtoC_utor[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[9] = multi_oneway_4seo_3dimWt(owseo_DtoC_utor[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
 
         // 右命令一方通行トンネル計算
-        owseo_p[10] = oneway_4seo_3dimWt(owseo_command_r[0][0], SEO_PARTICLES, OWSEO_ROWS, OWSEO_COLUMNS - 1, Rj);
+        owseo_p[10] = multi_oneway_4seo_3dimWt(owseo_command_r[0][0], SEO_PARTICLES, OWSEO_ROWS, OWSEO_COLUMNS - 1, Rj);
 
         // 右命令から衝突判定の一方通行トンネル計算
-        owseo_p[11] = oneway_4seo_3dimWt(owseo_CtoD_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, Rj);
+        owseo_p[11] = multi_oneway_4seo_3dimWt(owseo_CtoD_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, Rj);
 
         // 右衝突判定から下命令の一方通行トンネル計算
-        owseo_p[12] = oneway_4seo_3dimWt(owseo_DtoC_rtod[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
+        owseo_p[12] = multi_oneway_4seo_3dimWt(owseo_DtoC_rtod[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rj);
         /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         /*トンネルと電荷チャージ--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1453,32 +1462,32 @@ int main()
         }
 
         // トンネル発生
-        Seo_onway4Seo_tunnel(seo_p[0], owseo_p[0], &t, &dt);
+        multi_seo_onway4Seo_tunnel(seo_p[0], owseo_p[0], &t, &dt);
 
         // トンネルチャージとdtのリセット
         // 振動子のチャージ
-        seo_3dimcharge(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
-        seo_2dimCharge(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, R, dt);
-        seo_3dimcharge(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
-        seo_2dimCharge(seo_detection_l[0], SEO_ROWS, SEO_COLUMNS, R, dt);
-        seo_3dimcharge(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
-        seo_2dimCharge(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, R, dt);
-        seo_3dimcharge(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
-        seo_2dimCharge(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, R, dt);
+        multiseo_3dimcharge(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
+        multiseo_2dimCharge(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, R, dt);
+        multiseo_3dimcharge(seo_command_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
+        multiseo_2dimCharge(seo_detection_l[0], SEO_ROWS, SEO_COLUMNS, R, dt);
+        multiseo_3dimcharge(seo_command_u[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
+        multiseo_2dimCharge(seo_detection_u[0], SEO_ROWS, SEO_COLUMNS, R, dt);
+        multiseo_3dimcharge(seo_command_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, Rsmall, dt);
+        multiseo_2dimCharge(seo_detection_r[0], SEO_ROWS, SEO_COLUMNS, R, dt);
 
         // 一方通行のチャージ
-        oneway_4seo_3dimCharge(owseo_command_d[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_CtoD_d[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_dtol[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_command_l[0][0], SEO_PARTICLES, OWSEO_COLUMNS, OWSEO_ROWS - 1, R, dt);
-        oneway_4seo_3dimCharge(owseo_CtoD_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_ltou[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_command_u[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_CtoD_u[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_utor[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
-        oneway_4seo_3dimCharge(owseo_command_r[0][0], SEO_PARTICLES, OWSEO_COLUMNS, OWSEO_ROWS - 1, R, dt);
-        oneway_4seo_3dimCharge(owseo_CtoD_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, R, dt);
-        oneway_4seo_3dimCharge(owseo_DtoC_rtod[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_command_d[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_CtoD_d[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_DtoC_dtol[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_command_l[0][0], SEO_PARTICLES, OWSEO_COLUMNS, OWSEO_ROWS - 1, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_CtoD_l[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_DtoC_ltou[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_command_u[0][0], SEO_PARTICLES, OWSEO_ROWS - 1, OWSEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_CtoD_u[0][0], SEO_PARTICLES, SEO_ROWS - 1, SEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_DtoC_utor[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_command_r[0][0], SEO_PARTICLES, OWSEO_COLUMNS, OWSEO_ROWS - 1, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_CtoD_r[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS - 1, R, dt);
+        multi_oneway_4seo_3dimCharge(owseo_DtoC_rtod[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, R, dt);
 
         // dtのリセット
         dt = 0.1;

@@ -211,8 +211,8 @@ typedef struct
     int locate;
 } multi_oneway_4seo;
 
-// 一方通行のVd割り当て(&multi_oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3)
-void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3);
+// 一方通行のVd割り当て(&multi_oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3,multi_junction_num)
+void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3, int junction_num);
 
 // 一方通行のパラメータ計算(&multi_oneway_4seo,Cs,Cjs足2,Cj足3,左端のVn,右端のVn)
 void multi_oneway_4seo_calcPara(multi_oneway_4seo *p, double Cs, double Cjs2, double Cjs3, double Vn0, double Vn1);
