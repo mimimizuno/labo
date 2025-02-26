@@ -74,6 +74,9 @@ typedef struct
     int tunnel_num;
 } multiseo;
 
+// 多重振動子の閾値計算
+double multiseo_vth(const multiseo *p, int leg, double Cs, double Cjs);
+
 // 多重振動子のパラメータ計算(&multiseo,足の本数,Cs,Cjs)
 void multiseo_Pcalc(multiseo *p, int leg, double Cs, double Cjs);
 
@@ -253,6 +256,9 @@ void tunnelseo(seo *sp, double *t, double *dt);
 
 // 振動子のトンネル(表示有)(spfirst,sp,&t,&dt)
 void tunnelprintseo(seo *spfirst, seo *sp, double *t, double *dt);
+
+// 多重振動子のトンネル(表示有)(multispfirst,sp,&t,&dt)
+void multitunnelprintseo(multiseo *spfirst, multiseo *sp, double *t, double *dt);
 
 // 振動子,メモリ,一方通行のトンネル(sp,mp,osp,&t,&dt)
 void tunnel(seo *sp, memori *mp, onewayseo *osp, double *t, double *dt);

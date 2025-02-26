@@ -305,11 +305,21 @@ void seo_tunnel(seo *p)
     }
 }
 /*--------------------------------------------------多重振動子----------------------------------------------------------------------*/
+// 多重振動子の閾値計算
+double multiseo_vth(const multiseo *p, int leg, double Cs, double Cjs)
+{
+    double Vth;
+    Vth = p->multi_num * e * (leg * (p->multi_num - 1) * Cs + Cjs) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs));
+    return Vth;
+}
+
 // 多重振動子のパラメータ計算(&multiseo,足の本数,Cs,Cjs)
 void multiseo_Pcalc(multiseo *p, int leg, double Cs, double Cjs)
 {
     double V_sum = p->V1 + p->V2 + p->V3 + p->V4 + p->V5 + p->V6;
-    p->Vn = p->multi_num * (Cjs * p->Q + Cs * Cjs * V_sum - Cjs * p->tunnel_num * e) / Cjs * (leg * Cjs * (p->multi_num * Cs + Cjs));
+    // p->Vn = p->multi_num * (Cjs * p->Q + Cs * Cjs * V_sum - Cjs * p->tunnel_num * e) / (Cjs * (leg * p->multi_num * Cs + Cjs));
+    p->Vn = (p->multi_num * (Cjs * p->Q + Cs * Cjs * V_sum) - Cjs * p->tunnel_num * e) / (Cjs * (leg * p->multi_num * Cs + Cjs));
+
 }
 
 // 多重振動子のエネルギー計算(&multiseo,足の本数,Cs,Cjs)
@@ -319,7 +329,7 @@ void multiseo_Ecalc(multiseo *p, int leg, double Cs, double Cjs)
     // up
     p->dE[0] = e * ((-(p->multi_num - 1) * leg + 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q - e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs));
     // down
-    p->dE[1] = - e * (-(-(p->multi_num - 1) * leg - 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q + e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs)); 
+    p->dE[1] = -e * (-(-(p->multi_num - 1) * leg - 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q + e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs)); 
 }
 
 // 多重振動子の電荷チャージ(&multiseo,R,dt)
@@ -1315,6 +1325,29 @@ void tunnelprintseo(seo *spfirst, seo *sp, double *t, double *dt)
         *t += *dt;
     }
 }
+
+// 多重振動子のトンネル(表示有)(multispfirst,sp,&t,&dt)
+void multitunnelprintseo(multiseo *spfirst, multiseo *sp, double *t, double *dt)
+{
+    // トンネル待ち時間比較
+    if (sp->tunnel == 0)
+    { // トンネルしないとき
+        *t += *dt;
+    }
+    else if (sp->wt[sp->tunnel] < *dt && sp->wt[sp->tunnel] > 0.0)
+    { // 多重振動子トンネル
+        multiseo_tunnel(sp);
+        printf("t = %f multiseo[%d]\n", *t, (sp - spfirst));
+        *t += sp->wt[sp->tunnel];
+        *dt = sp->wt[sp->tunnel];
+    }
+    else
+    { // トンネルしないとき
+        *t += *dt;
+    }
+}
+
+
 // 振動子,メモリ,一方通行のトンネル(sp,mp,osp,&t,&dt)
 void tunnel(seo *sp, memori *mp, onewayseo *osp, double *t, double *dt)
 {

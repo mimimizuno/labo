@@ -1,0 +1,10 @@
+set terminal qt font "Arial,10"
+set xl 't[ns]'
+set yl 'V[V]'
+
+#多重振動子のテスト
+p 'single_test.txt' u 1:2 title 'Vn' w steps lw 3,\
+# 'test.txt' u 1:3 title 'commandd[1][6][8]' w steps lw 3,\
+# 'test.txt' u 1:4 title 'detecd[6][8]' w steps lw 3,\
+#  'test.txt' u 1:5 title 'commandl[0][6][8]' w steps lw 3,\
+#  'test.txt' u 1:6 title 'commandl[1][6][8]' w steps lw 3,\
