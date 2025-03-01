@@ -9,20 +9,20 @@
 #define Rsmall 0.8            // 小さめの抵抗値[GΩ]
 #define Rj 0.001              // トンネル抵抗[GΩ]
 #define C 2                   // 接合容量[aF]
-#define Vd_seo 0.004          // 振動子のバイアス電圧
-#define Vd_owseo 0.0039       // 一方通行回路のバイアス電圧
+#define Vd_seo 0.0041          // 振動子のバイアス電圧
+#define Vd_owseo 0.004        // 一方通行回路のバイアス電圧
 #define Cjs1 18               // 足1振動子のトンネル容量[aF]
 #define Cjs2 16               // 足2振動子のトンネル容量[aF]
 #define Cjs3 14               // 足3振動子のトンネル容量[aF]
 #define Cjs4 12               // 足4振動子のトンネル容量[aF]
 #define Cjs5 10               // 足5振動子のトンネル容量[aF]
 #define Cjs6 8                // 足6振動子のトンネル容量[aF]
-#define multi_Cjs1 360         // 20重における足1振動子のトンネル容量(18 * 20)[aF]
-#define multi_Cjs2 320         // 20重における足2振動子のトンネル容量(16 * 20)[aF]
-#define multi_Cjs3 280         // 20重における足3振動子のトンネル容量(14 * 20)[aF]
-#define multi_Cjs4 240         // 20重における足4振動子のトンネル容量(12 * 20)[aF]
-#define multi_Cjs5 200         // 20重における足5振動子のトンネル容量(10 * 20)[aF]
-#define multi_Cjs6 160          // 20重における足6振動子のトンネル容量(8 * 20)[aF]
+#define multi_Cjs1 390        // 20重における足1振動子のトンネル容量(18 * 20)[aF]
+#define multi_Cjs2 390        // 20重における足2振動子のトンネル容量(16 * 20)[aF]
+#define multi_Cjs3 390        // 20重における足3振動子のトンネル容量(14 * 20)[aF]
+#define multi_Cjs4 390        // 20重における足4振動子のトンネル容量(12 * 20)[aF]
+#define multi_Cjs5 390        // 20重における足5振動子のトンネル容量(10 * 20)[aF]
+#define multi_Cjs6 390        // 20重における足6振動子のトンネル容量(8 * 20)[aF]
 #define multi_junction_num 20 // 多重トンネル接合の数
 #define left 0                // 左変数
 #define right 1               // 右変数
@@ -696,6 +696,15 @@ int main()
     /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
     while (t < 200)
     {
+        if(20<t && t < 21){
+            printf("t = %f\n", t);
+        }
+        else if(50<t && t < 51){
+            printf("t = %f\n", t);
+        }
+        else if(100<t && t < 100.1){
+            printf("t = %f\n", t);
+        }
         // ファイル書き込み[V]
         fprint_multilayrow(seo_command_d[0][0], SEO_PARTICLES, SEO_ROWS, SEO_COLUMNS, fp1, t, pt);
         fprint_multicollisionlay(seo_detection_d[0], SEO_ROWS, SEO_COLUMNS, fp2, t, pt);
