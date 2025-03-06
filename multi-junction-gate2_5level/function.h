@@ -245,6 +245,9 @@ void getRunTime(double st_time, double end_time);
 // 隣接振動子からの影響を考慮したバイアス電圧(Cs,本体の足,本体のCjs,隣接振動子の足,隣接振動子のCjs)
 double viasarrange(double Cs, int myleg, int yourleg, double myCjs, double yourCjs);
 
+// 多重振動子からの影響を考慮した一方通行の低めバイアス電圧の下がり幅(Cs,本体の足,本体のCjs,隣接振動子の足,隣接振動子のCjs,トンネルの多重数,割合(0-1))
+double multi_viasarrange(double Cs, int myleg, double myCjs, int yourleg, double yourCjs, int multi_num, double ratio);
+
 // 振動子と一方通行のチャージ(&s,&smax,&os,&osmax,R,&dt)
 void charge(seo *p, seo *pmax, onewayseo *op, onewayseo *opmax, double R, double *dt);
 

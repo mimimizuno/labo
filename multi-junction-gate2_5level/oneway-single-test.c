@@ -61,7 +61,7 @@ int main()
     seo[2].Vd = Vd_seo;
     seo[2].multi_num = multi_junction_num;
 
-    multi_oneway_4seo_setVd(&onewayseo[0], Vd_owseo, right, C, Cjs2, Cjs3, multi_junction_num);
+    multi_oneway_4seo_setVd(&onewayseo[0], Vd_owseo, right, C, multi_Cjs2, multi_Cjs3, multi_junction_num);
 
     printf("%f %f %f %f\n", onewayseo[0].ows[0].Vd, onewayseo[0].ows[1].Vd, onewayseo[0].ows[2].Vd, onewayseo[0].ows[3].Vd);
     printf("%f\n",multiseo_vth(&seo[1], 6, C, 400));
@@ -76,9 +76,9 @@ int main()
         }
         else break;
         /* ----------------出力-----------------------　*/
-        fprintf(fp, "%f %f %f %f %f %f %f\n", t, seo[1].Vn, onewayseo[0].ows[0].Vn, onewayseo[0].ows[1].Vn, onewayseo[0].ows[2].Vn, onewayseo[0].ows[3].Vn, seo[2].Vn);
+        fprintf(fp, "%f %f %f %f %f %f %f %f\n", t, seo[1].Vn, onewayseo[0].ows[0].Vn, onewayseo[0].ows[1].Vn, onewayseo[0].ows[2].Vn, onewayseo[0].ows[3].Vn, seo[2].Vn, onewayseo[0].ows[0].dE[1]);
         /* ----------------トリガ-----------------------　*/
-        if (t > 100 && t < 101)
+        if (t > 130 && t < 131)
         {
             printf("%f tunnel_sum = %d\n", t,seo[1].tunnel_num);
             printf("oneway.wt %f\n", oneway_pointor[0]->ows[oneway_pointor[0]->locate].wt[oneway_pointor[0]->ows[oneway_pointor[0]->locate].tunnel]);
@@ -102,7 +102,7 @@ int main()
         multi_oneway_4seo_calcEner(&onewayseo[0], C, multi_Cjs2, multi_Cjs3);
 
         /* ----------------待ち時間計算-----------------------　*/
-        seo_pointor[1] = multiseo_3dimwt(&seo[1], 1, 1, 1, Rj);
+        seo_pointor[1] = multiseo_3dimwt(&seo[1], 1, 1, 2, Rj);
         oneway_pointor[1] = multi_oneway_4seo_3dimWt(&onewayseo[0],1,1,1,Rj);
         /* ----------------トンネル待ち時間比較-----------------------　*/
         seo_pointor[0] = seo_pointor[1];

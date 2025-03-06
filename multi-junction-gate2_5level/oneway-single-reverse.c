@@ -7,22 +7,22 @@
 #define OWSEO_ROWS 10         // 一方通行回路 y
 #define R 1.5                 // 抵抗値[GΩ]
 #define Rsmall 0.8            // 小さめの抵抗値[GΩ]
-#define Rj 0.0001              // トンネル抵抗[GΩ]
+#define Rj 0.001              // トンネル抵抗[GΩ]
 #define C 2                   // 接合容量[aF]
-#define Vd_seo -0.004          // 振動子のバイアス電圧
-#define Vd_owseo 0.0039       // 一方通行回路のバイアス電圧
+#define Vd_seo 0.004          // 振動子のバイアス電圧
+#define Vd_owseo 0.004       // 一方通行回路のバイアス電圧
 #define Cjs1 18               // 足1振動子のトンネル容量[aF]
 #define Cjs2 16               // 足2振動子のトンネル容量[aF]
 #define Cjs3 14               // 足3振動子のトンネル容量[aF]
 #define Cjs4 12               // 足4振動子のトンネル容量[aF]
 #define Cjs5 10               // 足5振動子のトンネル容量[aF]
 #define Cjs6 8                // 足6振動子のトンネル容量[aF]
-#define multi_Cjs1 360        // 20重における足1振動子のトンネル容量(18 * 20)[aF]
-#define multi_Cjs2 320        // 20重における足2振動子のトンネル容量(16 * 20)[aF]
-#define multi_Cjs3 280        // 20重における足3振動子のトンネル容量(14 * 20)[aF]
-#define multi_Cjs4 240        // 20重における足4振動子のトンネル容量(12 * 20)[aF]
-#define multi_Cjs5 200        // 20重における足5振動子のトンネル容量(10 * 20)[aF]
-#define multi_Cjs6 160        // 20重における足6振動子のトンネル容量(8 * 20)[aF]
+#define multi_Cjs1 398        // 20重における足1振動子のトンネル容量(18 * 20)[aF]
+#define multi_Cjs2 397        // 20重における足2振動子のトンネル容量(16 * 20)[aF]
+#define multi_Cjs3 395        // 20重における足3振動子のトンネル容量(14 * 20)[aF]
+#define multi_Cjs4 394        // 20重における足4振動子のトンネル容量(12 * 20)[aF]
+#define multi_Cjs5 393        // 20重における足5振動子のトンネル容量(10 * 20)[aF]
+#define multi_Cjs6 392        // 20重における足6振動子のトンネル容量(8 * 20)[aF]
 #define multi_junction_num 20 // 多重トンネル接合の数
 #define left 0                // 左変数
 #define right 1               // 右変数
@@ -37,25 +37,34 @@ int main()
     FILE *fp;
     st_time = getTime(); // 実行開始時刻を記録
 
-    fp = fopen("single_test.txt", "w");
+    fp = fopen("oneway_single_test.txt", "w");
 
     if (fp == NULL)
     {
         printf("file open error.\n");
     }
     /* ------------初期設定---------------------------------------------　*/
-    multiseo *seo_pointor[2];
-    multiseo seo[2] = {0};
+    multiseo *seo_pointor[3];
+    multiseo seo[3] = {0};
     seo_pointor[0] = seo;
-    seo_pointor[1] = seo;
+    seo_pointor[1] = &seo[1];
+    seo_pointor[2] = &seo[2];
 
+    multi_oneway_4seo *oneway_pointor[2];
+    multi_oneway_4seo onewayseo[2] = {0};
+    oneway_pointor[0] = onewayseo;
+    oneway_pointor[0] = onewayseo;
 
     /* ------------バイアス電圧---------------------------------------------　*/
     seo[1].Vd = Vd_seo;
     seo[1].multi_num = multi_junction_num;
+    seo[2].Vd = Vd_seo;
+    seo[2].multi_num = multi_junction_num;
 
-    printf("%f %f %f %f %f %f\n", seo[1].V1, seo[1].V2, seo[1].V3, seo[1].V4, seo[1].V5, seo[1].V6);
-    printf("%f\n",multiseo_vth(&seo[1], 1, C, multi_Cjs1));
+    multi_oneway_4seo_setVd(&onewayseo[0], Vd_owseo, right, C, multi_Cjs2, multi_Cjs3, multi_junction_num);
+
+    printf("%f %f %f %f\n", onewayseo[0].ows[0].Vd, onewayseo[0].ows[1].Vd, onewayseo[0].ows[2].Vd, onewayseo[0].ows[3].Vd);
+    printf("%f\n",multiseo_vth(&seo[1], 6, C, 400));
 
     /* ------------whileループ---------------------------------------------　*/
     int roop_num = 0;
@@ -67,30 +76,42 @@ int main()
         }
         else break;
         /* ----------------出力-----------------------　*/
-        fprintf(fp, "%f %f %f %f %f %f %f %f\n", t, seo[1].Vn, seo[1].Vd, seo[1].dE[0], seo[1].dE[1], seo[1].dQ, seo[1].Q, seo[0].Vn);
+        fprintf(fp, "%f %f %f %f %f %f %f %f\n", t, seo[1].Vn, onewayseo[0].ows[0].Vn, onewayseo[0].ows[1].Vn, onewayseo[0].ows[2].Vn, onewayseo[0].ows[3].Vn, seo[2].Vn, onewayseo[0].ows[0].dE[1]);
         /* ----------------トリガ-----------------------　*/
-        if (t > 100 && t < 101)
+        if (t > 130 && t < 131)
         {
             printf("%f tunnel_sum = %d\n", t,seo[1].tunnel_num);
-            seo[0].Vn = -0.006;
+            printf("oneway.wt %f\n", oneway_pointor[0]->ows[oneway_pointor[0]->locate].wt[oneway_pointor[0]->ows[oneway_pointor[0]->locate].tunnel]);
+            
+            seo[2].V2 = 0.006;
         }
         else
         {
-            seo[0].Vn = 0;
+            seo[2].V2 = 0;
         }
         /* ----------------パラメータ計算-----------------------　*/
         seo[1].V1 = seo[0].Vn;
-        multiseo_Pcalc(&seo[1], 1, C, multi_Cjs1);
+        seo[1].V2 = onewayseo[0].ows[0].Vn;
+        multiseo_Pcalc(&seo[1], 2, C, multi_Cjs2);
+        seo[2].V1 = onewayseo[0].ows[3].Vn;
+        multiseo_Pcalc(&seo[2], 2, C, multi_Cjs2);
+        multi_oneway_4seo_calcPara(&onewayseo[0], C, multi_Cjs2, multi_Cjs3, seo[1].Vn, seo[2].Vn);
         /* ----------------エネルギー計算-----------------------　*/
-        multiseo_Ecalc(&seo[1], 1, C, multi_Cjs1);
+        multiseo_Ecalc(&seo[1], 2, C, multi_Cjs2);
+        multiseo_Ecalc(&seo[2], 2, C, multi_Cjs2);
+        multi_oneway_4seo_calcEner(&onewayseo[0], C, multi_Cjs2, multi_Cjs3);
+
         /* ----------------待ち時間計算-----------------------　*/
-        seo_pointor[1] = multiseo_3dimwt(&seo[1], 1, 1, 1, Rj);
+        seo_pointor[1] = multiseo_3dimwt(&seo[1], 1, 1, 2, Rj);
+        oneway_pointor[1] = multi_oneway_4seo_3dimWt(&onewayseo[0],1,1,1,Rj);
         /* ----------------トンネル待ち時間比較-----------------------　*/
         seo_pointor[0] = seo_pointor[1];
+        oneway_pointor[0] = oneway_pointor[1];
         /* ----------------トンネル発生-----------------------　*/
-        multitunnelprintseo(seo, seo_pointor[0], &t, &dt);
+        multi_seo_onway4Seo_tunnel(seo_pointor[0], oneway_pointor[0], &t, &dt);
         /* ----------------チャージとdtリセット-----------------------　*/
-        multiseo_3dimCharge(seo, 1, 1, 2, R, dt);
+        multiseo_3dimCharge(seo, 1, 1, 3, R, dt);
+        multi_oneway_4seo_3dimCharge(&onewayseo[0],1,1,1,R,dt);
         dt = 0.1;
     }
     end_time = getTime();          // 実行終了時刻を記録

@@ -64,7 +64,7 @@ void seo_Pcalc(seo *p, int leg, double Cs, double Cjs)
         q5 = (Cs * (-p->Q + Cjs * p->V5 - Cs * (p->V1 + p->V2 + p->V3 + p->V4 - 4 * p->V5))) / (5 * Cs + Cjs);
         p->Vn = (p->Q + q1 + q2 + q3 + q4 + q5) / Cjs;
     }
-        else if (leg == 6)
+    else if (leg == 6)
     {
         double q1 = 0;
         double q2 = 0;
@@ -319,17 +319,16 @@ void multiseo_Pcalc(multiseo *p, int leg, double Cs, double Cjs)
     double V_sum = p->V1 + p->V2 + p->V3 + p->V4 + p->V5 + p->V6;
     // p->Vn = p->multi_num * (Cjs * p->Q + Cs * Cjs * V_sum - Cjs * p->tunnel_num * e) / (Cjs * (leg * p->multi_num * Cs + Cjs));
     p->Vn = (p->multi_num * (Cjs * p->Q + Cs * Cjs * V_sum) - Cjs * p->tunnel_num * e) / (Cjs * (leg * p->multi_num * Cs + Cjs));
-
 }
 
 // 多重振動子のエネルギー計算(&multiseo,足の本数,Cs,Cjs)
 void multiseo_Ecalc(multiseo *p, int leg, double Cs, double Cjs)
 {
     double V_sum = p->V1 + p->V2 + p->V3 + p->V4 + p->V5 + p->V6;
-    // up
+    // up(電子一個分電圧が下がる)
     p->dE[0] = e * ((-(p->multi_num - 1) * leg + 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q - e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs));
-    // down
-    p->dE[1] = -e * (-(-(p->multi_num - 1) * leg - 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q + e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs)); 
+    // down(電子一個分電圧が上がる)
+    p->dE[1] = -e * (-(-(p->multi_num - 1) * leg - 2 * leg * p->tunnel_num) * Cs * e + Cjs * (2 * p->Q + e) + 2 * Cs * Cjs * V_sum) / (2 * Cjs * (leg * p->multi_num * Cs + Cjs));
 }
 
 // 多重振動子の電荷チャージ(&multiseo,R,dt)
@@ -405,7 +404,7 @@ multiseo *multiseo_wt(multiseo *p, multiseo *pmax, double Rj)
             {
                 if (p->dE[i - 1] > 0)
                 {
-                    for(int rep=0; rep < p->multi_num - abs(p->tunnel_num);rep++)
+                    for (int rep = 0; rep < p->multi_num - abs(p->tunnel_num); rep++)
                     {
                         double mj_tunnele_wt = (e * e * Rj / p->dE[i - 1]) * log(1 / Random());
                         p->wt[i] = min(mj_tunnele_wt, p->wt[i]);
@@ -447,7 +446,7 @@ multiseo *multiseo_2dimwt(multiseo *p, int rows, int columns, double Rj)
             {
                 if (p->dE[j - 1] > 0)
                 {
-                    for(int rep=0; rep < p->multi_num - abs(p->tunnel_num);rep++)
+                    for (int rep = 0; rep < p->multi_num - abs(p->tunnel_num); rep++)
                     {
                         double mj_tunnele_wt = (e * e * Rj / p->dE[j - 1]) * log(1 / Random());
                         p->wt[j] = min(mj_tunnele_wt, p->wt[j]);
@@ -481,18 +480,19 @@ multiseo *multiseo_3dimwt(multiseo *p, int particles, int rows, int columns, dou
     {
         for (j = 0; j < 3; j++)
         {
-            if (j == 0)
-            {
-                p->wt[j] = 0.1;
-            }
-            else
+            // 待ち時間の初期化
+            p->wt[j] = 0.1;
+            if (j != 0)
             {
                 if (p->dE[j - 1] > 0)
                 {
-                    for(int rep=0; rep < p->multi_num - abs(p->tunnel_num);rep++)
+                    // printf("dE[%d] > 0 %f \n", j-1,p->tunnel_num);
+                    for (int rep = 0; rep < p->multi_num - abs(p->tunnel_num); rep++)
+                    // トンネル接合の数からトンネルの総数をを引いた数の分待ち時間を計算して最小値を導出
                     {
-                        double mj_tunnele_wt = (e * e * Rj / p->dE[j - 1]) * log(1 / Random());
-                        p->wt[j] = min(mj_tunnele_wt, p->wt[j]);
+                        double mj_tunnel_wt = (e * e * Rj / p->dE[j - 1]) * log(1 / Random());
+                        p->wt[j] = min(mj_tunnel_wt, p->wt[j]);
+                        // printf("mj_tunnel_wt = %f, wt[%d] = %f\n",mj_tunnel_wt, j,p->wt[j]);
                     }
                 }
                 else
@@ -519,7 +519,7 @@ void multiseo_tunnel(multiseo *p)
     if (p->tunnel == 1) // up direction
     {
         p->tunnel_num++;
-        if(abs(p->tunnel_num) == p->multi_num)
+        if (abs(p->tunnel_num) == p->multi_num)
         {
             p->Q -= e;
             p->tunnel_num = 0;
@@ -528,7 +528,7 @@ void multiseo_tunnel(multiseo *p)
     else if (p->tunnel == 2) // down direction
     {
         p->tunnel_num--;
-        if(abs(p->tunnel_num) == p->multi_num)
+        if (abs(p->tunnel_num) == p->multi_num)
         {
             p->Q += e;
             p->tunnel_num = 0;
@@ -1090,7 +1090,7 @@ oneway_4seo *oneway_4seo_3dimWt(oneway_4seo *p, int particles, int rows, int col
 
 /*--------------------------------------------------一方通行(多重振動子4個)-------------------------------------------------------------*/
 // 一方通行のVd割り当て(&multi_oneway_4seo, Vdの絶対値, 向き(0 left or 1 right),C,Cjs2,Cjs3,multi_junction_num)
-void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double Cjs2, double Cjs3,int junction_num)
+void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, double Cs, double multi_Cjs2, double multi_Cjs3, int junction_num)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -1101,7 +1101,7 @@ void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, dou
         }
         else if (i == 0 && direction == 0)
         { // 一方通行　左
-            p->ows[i].Vd = -Vd + ((Cs * e) / ((3 * Cs + Cjs3) * (2 * Cs + Cjs2)));
+            p->ows[i].Vd = -Vd + multi_viasarrange(Cs, 3, multi_Cjs3, 2, multi_Cjs2, junction_num, 0.8);
         }
         else if (i == 3 && direction == 0)
         {
@@ -1113,7 +1113,7 @@ void multi_oneway_4seo_setVd(multi_oneway_4seo *p, double Vd, int direction, dou
         }
         else if (i == 3 && direction == 1)
         {
-            p->ows[i].Vd = -Vd + ((Cs * e) / ((3 * Cs + Cjs3) * (2 * Cs + Cjs2)));
+            p->ows[i].Vd = -Vd + multi_viasarrange(Cs, 3, multi_Cjs3, 2, multi_Cjs2, junction_num, 0.8);
         }
     }
 }
@@ -1148,18 +1148,18 @@ void multi_oneway_4seo_calcPara(multi_oneway_4seo *p, double Cs, double Cjs2, do
 }
 
 // 一方通行のエネルギー計算(&multi_oneway_4seo,Cs,Cjs足2,Cj足3)
-void multi_oneway_4seo_calcEner(multi_oneway_4seo *p, double Cs, double Cjs2, double Cjs3)
+void multi_oneway_4seo_calcEner(multi_oneway_4seo *p, double Cs, double multi_Cjs2, double multi_Cjs3)
 {
     int i = 0;
     for (i = 0; i < 4; i++)
     {
         if (i == 0 || i == 3)
         { // 足3本
-            multiseo_Ecalc(&(p->ows[i]), 3, Cs, Cjs3);
+            multiseo_Ecalc(&(p->ows[i]), 3, Cs, multi_Cjs3);
         }
         else if (i == 1 || i == 2)
         { // 足2本
-            multiseo_Ecalc(&(p->ows[i]), 2, Cs, Cjs2);
+            multiseo_Ecalc(&(p->ows[i]), 2, Cs, multi_Cjs2);
         }
     }
 }
@@ -1189,18 +1189,16 @@ multi_oneway_4seo *multi_oneway_4seo_3dimWt(multi_oneway_4seo *p, int particles,
         {
             for (j = 0; j < 3; j++)
             {
-                if (j == 0)
-                {
-                    p->ows[k].wt[j] = 0.1;
-                }
-                else
+                p->ows[k].wt[j] = 0.1;
+                if (j != 0)
                 {
                     if (p->ows[k].dE[j - 1] > 0)
                     {
-                        for(int rep=0; rep < p->ows[k].multi_num - abs(p->ows[k].tunnel_num);rep++)
+                        for (int rep = 0; rep < p->ows[k].multi_num - abs(p->ows[k].tunnel_num); rep++)
                         {
-                            double mj_tunnele_wt = (e * e * Rj / p->ows[k].dE[j - 1]) * log(1 / Random());
-                            p->ows[k].wt[j] = min(mj_tunnele_wt, p->ows[k].wt[j]);
+                            double mj_tunnel_wt = (e * e * Rj / p->ows[k].dE[j - 1]) * log(1 / Random());
+                            p->ows[k].wt[j] = min(mj_tunnel_wt, p->ows[k].wt[j]);
+                            // printf("mj_tunnel_wt = %f, ows[%d].wt[%d] = %f\n",mj_tunnel_wt, k,j,p->ows[k].wt[j]);
                         }
                     }
                     else
@@ -1269,6 +1267,12 @@ void getRunTime(double st_time, double end_time)
 double viasarrange(double Cs, int myleg, int yourleg, double myCjs, double yourCjs)
 {
     return ((Cs * e) / ((myleg * Cs + myCjs) * (yourleg * Cs + yourCjs)));
+}
+
+// 多重振動子からの影響を考慮した一方通行の低めバイアス電圧の下がり幅(Cs,本体の足,本体のCjs,隣接振動子の足,隣接振動子のCjs,トンネルの多重数,割合(0-1))
+double multi_viasarrange(double Cs, int myleg, double myCjs, int yourleg, double yourCjs, int multi_num, double ratio)
+{
+    return ratio * ((e * multi_num * multi_num * Cs) / ((myleg * multi_num * Cs + myCjs) * (myleg * multi_num * Cs + yourCjs)));
 }
 
 // 振動子と一方通行のチャージ(&s,&smax,&os,&osmax,R,&dt)
@@ -1346,7 +1350,6 @@ void multitunnelprintseo(multiseo *spfirst, multiseo *sp, double *t, double *dt)
         *t += *dt;
     }
 }
-
 
 // 振動子,メモリ,一方通行のトンネル(sp,mp,osp,&t,&dt)
 void tunnel(seo *sp, memori *mp, onewayseo *osp, double *t, double *dt)
@@ -1632,18 +1635,18 @@ void fprintlayrow(seo *spfirst, int seoparticles, int seorows, int seocolumns, F
                     if (y == 1)
                     {
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                     }
                     else if (y == seorows)
                     {
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
-                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                     }
                     else
                     {
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                     }
                 }
 
@@ -1658,19 +1661,19 @@ void fprintlayrow(seo *spfirst, int seoparticles, int seorows, int seocolumns, F
                         if (y == 1)
                         {
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                            // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                         }
                         else if (y == seorows)
                         {
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
-                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                            // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                             fprintf(fp, "\n");
                         }
                         else
                         {
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                            // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                         }
                     }
                 }
@@ -1787,18 +1790,18 @@ void fprint_multilayrow(multiseo *spfirst, int seoparticles, int seorows, int se
                     if (y == 1)
                     {
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                     }
                     else if (y == seorows)
                     {
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
-                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                     }
                     else
                     {
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
                         fprintf(fp, "%d %d %f\n", counts, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                        //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                        // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                     }
                 }
 
@@ -1813,19 +1816,19 @@ void fprint_multilayrow(multiseo *spfirst, int seoparticles, int seorows, int se
                         if (y == 1)
                         {
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                            // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                         }
                         else if (y == seorows)
                         {
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
-                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                            // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                             fprintf(fp, "\n");
                         }
                         else
                         {
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + (y - 1) * seocolumns + z * (seocolumns * seorows))->Vn);
                             fprintf(fp, "%d %d %f\n", counts + 1, y, (spfirst + x + y * seocolumns + z * (seocolumns * seorows))->Vn);
-                            //fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
+                            // fprintf(fp, "x = %d y = %d z = %d\n", x, y, z);
                         }
                     }
                 }
